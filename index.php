@@ -1,38 +1,6 @@
 <?php
+namespace Trellis\staticLdp;
 
-require_once "vendor/autoload.php";
+require_once __DIR__ . '/src/app.php';
 
-$valid_types = [
-    "text/turtle" => "turtle",
-    "application/ld+json" => "jsonld",
-    "application/n-triples" => "ntriples"];
-
-$format = "text/turtle";
-
-foreach (getallheaders() as $key => $val) {
-    if (strtolower($key) === "accept") {
-        $type = explode(";", $val)[0];
-        if (array_key_exists($type, $valid_types)) {
-            $format = $type;
-        }
-    }
-}
-
-header("Link: <http://www.w3.org/ns/ldp#BasicContainer>; rel=\"type\"");
-header("Content-Type: $format");
-
-$graph = new EasyRdf_Graph();
-
-$subject = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
-$predicate = "http://www.w3.org/ns/ldp#contains";
-
-$docroot = dirname($_SERVER['SCRIPT_FILENAME']);
-$path = $_SERVER['REQUEST_URI'];
-
-foreach(scandir($docroot . "/" . $path) as $filename) {
-    if (substr($filename, 0, 1) !== ".") {
-        $graph->addResource($subject, $predicate, $subject . $filename);
-    }
-}
-
-echo $graph->serialise($valid_types[$format]);
+$app->run();
