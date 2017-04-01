@@ -56,6 +56,9 @@ class ResourceController implements ControllerProviderInterface {
       "Content-Type" => $format,
     ];
 
+    $namespaces = new \EasyRdf_Namespace();
+    $namespaces->set("ldp", "http://www.w3.org/ns/ldp#");
+
     $graph = new \EasyRdf_Graph();
 
     $subject = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
