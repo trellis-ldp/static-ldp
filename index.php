@@ -2,6 +2,8 @@
 
 require_once "vendor/autoload.php";
 
+$LDP = "http://www.w3.org/ns/ldp#";
+
 $valid_types = [
     "text/turtle" => "turtle",
     "application/ld+json" => "jsonld",
@@ -18,13 +20,16 @@ foreach (getallheaders() as $key => $val) {
     }
 }
 
-header("Link: <http://www.w3.org/ns/ldp#BasicContainer>; rel=\"type\"");
+header("Link: <" . $LDP . "BasicContainer>; rel=\"type\"");
 header("Content-Type: $format");
+
+$namespaces = new EasyRdf_Namespace();
+$namespaces->set("ldp", $LDP);
 
 $graph = new EasyRdf_Graph();
 
 $subject = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
-$predicate = "http://www.w3.org/ns/ldp#contains";
+$predicate = $LDP . "contains";
 
 $docroot = dirname($_SERVER['SCRIPT_FILENAME']);
 $path = $_SERVER['REQUEST_URI'];
