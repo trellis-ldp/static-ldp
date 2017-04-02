@@ -1,6 +1,6 @@
 {
     "require": {
-        "silex/silex": "^1.3",
+        "silex/silex": "^2.0",
         "symfony/config": "^3.0",
         "symfony/yaml": "^3.0",
         "easyrdf/easyrdf": "^0.9.1",
