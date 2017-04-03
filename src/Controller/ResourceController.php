@@ -142,11 +142,11 @@ class ResourceController implements ControllerProviderInterface
    *   The format to respond in, if it is a RDFSource.
    * @param array $validRdfFormats
    *   The configured validRdfFormats.
-   * @param bool $doGet
+   * @param boolean $doGet
    *   Whether we are doing a GET or HEAD request.
    * @return \Symfony\Component\HttpFoundation\Response
    */
-  private function getFile($path, $responseFormat, array $validRdfFormats, bool $doGet = false) {
+  private function getFile($path, $responseFormat, array $validRdfFormats, $doGet = false) {
     $headers = [];
     // Plain might be RDF, check the file extension.
     $dirChunks = explode(DIRECTORY_SEPARATOR, $path);
@@ -199,11 +199,11 @@ class ResourceController implements ControllerProviderInterface
    *   The format to respond in, if it is a RDFSource.
    * @param array $validRdfFormats
    *   The configured validRdfFormats.
-   * @param bool $doGet
+   * @param boolean $doGet
    *   Whether we are doing a GET or HEAD request.
    * @return \Symfony\Component\HttpFoundation\Response
    */
-  private function getDirectory($path, $responseFormat, array $validRdfFormats, bool $doGet) {
+  private function getDirectory($path, $responseFormat, array $validRdfFormats, $doGet = false) {
 
     $subject = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
     $predicate = "http://www.w3.org/ns/ldp#contains";
@@ -216,6 +216,8 @@ class ResourceController implements ControllerProviderInterface
       "Link" => "<http://www.w3.org/ns/ldp#BasicContainer>; rel=\"type\"",
       "Content-Type" => $responseMimeType,
     ];
+    $namespaces = new \EasyRdf_Namespace();
+    $namespaces->set("ldp", "http://www.w3.org/ns/ldp#");
     $graph = new \EasyRdf_Graph();
 
     foreach (new \DirectoryIterator($path) as $fileInfo) {
