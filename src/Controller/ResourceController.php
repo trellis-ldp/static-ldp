@@ -321,19 +321,67 @@ class ResourceController implements ControllerProviderInterface
         if ($index !== false) {
             $responseMimeType = $validRdfFormats[$index]['mimeType'];
         }
+
+        $content = '';
+        $options = [];
+        if ($responseFormat == 'jsonld' && $this->useCompactJsonLd($request->headers->get("Accept"))) {
+            $options = [
+                "compact" => true,
+                "context" => (object) [
+                    'dcterms' => $this->DCTERMS_NS,
+                    'ldp' => $this->LDP_NS,
+                    'xsd' => 'http://www.w3.org/2001/XMLSchema#',
+                    'id' => '@id',
+                    'type' => '@type',
+                    'modified' => (object) [
+                        '@id' => 'dcterms:modified',
+                        '@type' => 'xsd:dateTime'
+                    ],
+                    'contains' => (object) [
+                        '@id' => 'ldp:contains',
+                        '@type' => '@id'
+                    ]
+                ]
+            ];
+        }
+
+        $content = $this->getGraphForPath($request, $path)->serialise($responseFormat, $options);
+
         $headers = [
             "Last-Modified" => $modifiedTime->format(\DateTime::W3C),
             "Link" => ["<{$this->LDP_NS}Resource>; rel=\"type\"",
                        "<{$this->LDP_NS}BasicContainer>; rel=\"type\""],
             "Vary" => "Accept",
             "Content-Type" => $responseMimeType,
+            "Content-Length" => strlen($content)
         ];
 
-        $content = $this->getGraphForPath($request, $path)->serialise($responseFormat);
-        $headers["Content-Length"] = strlen($content);
         if (!$doGet) {
             $content = '';
         }
         return new Response($content, 200, $headers);
+    }
+
+    /**
+     * @param $accept
+     *   The accept header
+     * @return true if the request if for compact json-ld; false otherwise
+     */
+    private function useCompactJsonLd($accept)
+    {
+        foreach (explode(",", $accept) as $a) {
+            $parts = explode(';', $a);
+            if (trim($parts[0]) == "application/ld+json") {
+                for ($i = 1; $i < count($parts); $i++) {
+                    $params = explode("=", $parts[$i]);
+                    if (trim($params[0]) == "profile" && count($params) == 2) {
+                        if (strpos($params[1], "http://www.w3.org/ns/json-ld#compacted") !== false) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 }
