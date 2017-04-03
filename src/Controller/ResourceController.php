@@ -9,6 +9,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ResourceController implements ControllerProviderInterface
 {
+    private $LDP_NS = "http://www.w3.org/ns/ldp#";
+    private $RDF_NS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+    private $DCTERMS_NS = "http://purl.org/dc/terms/";
 
     /**
      * {@inheritdoc}
@@ -184,8 +187,8 @@ class ResourceController implements ControllerProviderInterface
             $headers = [
                 "Last-Modified" => $modifiedTime->format(\DateTime::W3c),
                 "Link" => [
-                    "<http://www.w3.org/ns/ldp#Resource>; rel=\"type\"",
-                    "<http://www.w3.org/ns/ldp#RDFSource>; rel=\"type\""
+                    "<{$this->LDP_NS}Resource>; rel=\"type\"",
+                    "<{$this->LDP_NS}RDFSource>; rel=\"type\""
                 ],
                 "Vary" => "Accept",
                 "Content-Length" => strlen($content)
@@ -202,8 +205,8 @@ class ResourceController implements ControllerProviderInterface
             $headers = [
                 "Last-Modified" => $modifiedTime->format(\DateTime::W3C),
                 "Content-Type" => $responseMimeType,
-                "Link" => ["<http://www.w3.org/ns/ldp#Resource>; rel=\"type\"",
-                           "<http://www.w3.org/ns/ldp#NonRDFSource>; rel=\"type\""],
+                "Link" => ["<{$this->LDP_NS}Resource>; rel=\"type\"",
+                           "<{$this->LDP_NS}NonRDFSource>; rel=\"type\""],
                 "Content-Length" => $contentLength,
             ];
 
@@ -231,17 +234,17 @@ class ResourceController implements ControllerProviderInterface
     private function getGraphForPath(Request $request, $path)
     {
         $subject = $request->getUri();
-        $predicate = "http://www.w3.org/ns/ldp#contains";
+        $predicate = $this->LDP_NS . "contains";
         $modifiedTime = new \DateTime(date('c', filemtime($path)));
 
         $namespaces = new \EasyRdf_Namespace();
-        $namespaces->set("ldp", "http://www.w3.org/ns/ldp#");
-        $namespaces->set("dc", "http://purl.org/dc/terms/");
+        $namespaces->set("ldp", $this->LDP_NS);
+        $namespaces->set("dc", $this->DCTERMS_NS);
 
         $graph = new \EasyRdf_Graph();
-        $graph->addLiteral($subject, "http://purl.org/dc/terms/modified", $modifiedTime);
-        $graph->addResource($subject, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/ns/ldp#Resource");
-        $graph->addResource($subject, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/ns/ldp#BasicContainer");
+        $graph->addLiteral($subject, $this->DCTERMS_NS . "modified", $modifiedTime);
+        $graph->addResource($subject, $this->RDF_NS . "type", $this->LDP_NS . "Resource");
+        $graph->addResource($subject, $this->RDF_NS . "type", $this->LDP_NS . "BasicContainer");
 
         foreach (new \DirectoryIterator($path) as $fileInfo) {
             if ($fileInfo->isDot()) {
@@ -269,8 +272,8 @@ class ResourceController implements ControllerProviderInterface
         $modifiedTime = new \DateTime(date('c', filemtime($path)));
         $headers = [
             "Last-Modified" => $modifiedTime->format(\DateTime::W3C),
-            "Link" => ["<http://www.w3.org/ns/ldp#Resource>; rel=\"type\"",
-                       "<http://www.w3.org/ns/ldp#BasicContainer>; rel=\"type\""],
+            "Link" => ["<{$this->LDP_NS}Resource>; rel=\"type\"",
+                       "<{$this->LDP_NS}BasicContainer>; rel=\"type\""],
             "Vary" => "Accept",
             "Content-Type" => "text/html"
         ];
@@ -281,11 +284,11 @@ class ResourceController implements ControllerProviderInterface
                 'id' => '@id',
                 'type' => '@type',
                 'modified' => (object) [
-                    '@id' => 'http://purl.org/dc/terms/modified',
+                    '@id' => $this->DCTERMS_NS . 'modified',
                     '@type' => 'http://www.w3.org/2001/XMLSchema#dateTime'
                 ],
                 'contains' => (object) [
-                    '@id' => 'http://www.w3.org/ns/ldp#contains',
+                    '@id' => $this->LDP_NS . 'contains',
                     '@type' => '@id'
                 ]
             ]
@@ -320,8 +323,8 @@ class ResourceController implements ControllerProviderInterface
         }
         $headers = [
             "Last-Modified" => $modifiedTime->format(\DateTime::W3C),
-            "Link" => ["<http://www.w3.org/ns/ldp#Resource>; rel=\"type\"",
-                       "<http://www.w3.org/ns/ldp#BasicContainer>; rel=\"type\""],
+            "Link" => ["<{$this->LDP_NS}Resource>; rel=\"type\"",
+                       "<{$this->LDP_NS}BasicContainer>; rel=\"type\""],
             "Vary" => "Accept",
             "Content-Type" => $responseMimeType,
         ];
