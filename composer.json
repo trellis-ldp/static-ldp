@@ -6,6 +6,9 @@
         "easyrdf/easyrdf": "^0.9.1",
         "ml/json-ld": "^1.0"
     },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "2.*"
+    },
     "autoload": {
         "psr-4": {"Trellis\\StaticLdp\\": "src/"}
     }
