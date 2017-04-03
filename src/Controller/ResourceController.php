@@ -220,7 +220,10 @@ class ResourceController implements ControllerProviderInterface
     ];
     $namespaces = new \EasyRdf_Namespace();
     $namespaces->set("ldp", "http://www.w3.org/ns/ldp#");
+    $namespaces->set("dc", "http://purl.org/dc/terms/");
+
     $graph = new \EasyRdf_Graph();
+    $graph->addLiteral($subject, "http://purl.org/dc/terms/modified", new \DateTime(date('c', filemtime($path))));
 
     foreach (new \DirectoryIterator($path) as $fileInfo) {
       if ($fileInfo->isDot()) {
