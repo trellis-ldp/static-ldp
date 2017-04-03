@@ -5,7 +5,7 @@
         "symfony/yaml": "^3.0",
         "easyrdf/easyrdf": "^0.9.1",
         "ml/json-ld": "^1.0",
-        "twig/twig": "^1.0"
+        "twig/twig": "^1.33"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "2.0"
