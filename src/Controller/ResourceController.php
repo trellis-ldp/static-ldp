@@ -308,7 +308,7 @@ class ResourceController implements ControllerProviderInterface
      *   Whether we are doing a GET or HEAD request.
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    private function getDirectory($request, $path, $responseFormat, array $validRdfFormats, $doGet = false)
+    private function getDirectory(Request $request, $path, $responseFormat, array $validRdfFormats, $doGet = false)
     {
         $modifiedTime = new \DateTime(date('c', filemtime($path)));
 
