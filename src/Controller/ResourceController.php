@@ -75,6 +75,7 @@ class ResourceController implements ControllerProviderInterface
     if (is_file($requested_path)) {
       $response = $this->getFile(
         $app,
+        $request,
         $requested_path,
         $responseFormat,
         $app['config']['validRdfFormats'],
@@ -84,6 +85,7 @@ class ResourceController implements ControllerProviderInterface
     } else {
       // We assume it's a directory.
       $response = $this->getDirectory(
+        $request,
         $requested_path,
         $responseFormat,
         $app['config']['validRdfFormats'],
@@ -136,6 +138,8 @@ class ResourceController implements ControllerProviderInterface
    *
    * @param \Silex\Application $app
    *   The Silex application.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The incoming request.
    * @param $path
    *   Path to file we are serving.
    * @param $responseFormat
@@ -146,27 +150,34 @@ class ResourceController implements ControllerProviderInterface
    *   Whether we are doing a GET or HEAD request.
    * @return \Symfony\Component\HttpFoundation\Response
    */
-  private function getFile(Application $app, $path, $responseFormat, array $validRdfFormats, $doGet = false) {
+  private function getFile(Application $app, Request $request, $path, $responseFormat, array $validRdfFormats, $doGet = false) {
     $headers = [];
     // Plain might be RDF, check the file extension.
     $dirChunks = explode(DIRECTORY_SEPARATOR, $path);
     $filename = array_pop($dirChunks);
     $filenameChunks = explode('.', $filename);
+    $modifiedTime = new \DateTime(date('c', filemtime($path)));
     $extension = array_pop($filenameChunks);
     $index = array_search($extension, array_column($validRdfFormats, 'extension'));
     if ($index !== FALSE) {
       // This is a RDF file.
       $inputFormat = $validRdfFormats[$index]['format'];
-      $headers["Link"] = ["<http://www.w3.org/ns/ldp#Resource>; rel=\"type\"",
-                          "<http://www.w3.org/ns/ldp#RDFSource>; rel=\"type\""];
-      $headers["Vary"] = "Accept";
-      $subject = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+      $subject = $request->getScheme() . "://" . $request->getHttpHost() . $request->getBasePath() . $path;
 
       // Converting RDF from something to something else.
       $graph = new \EasyRdf_Graph();
       $graph->parseFile($path, $inputFormat, $subject);
       $content = $graph->serialise($responseFormat);
-      $headers["Content-Length"] = strlen($content);
+
+      $headers = [
+          "Last-Modified" => $modifiedTime->format(\DateTime::W3c),
+          "Link" => [
+              "<http://www.w3.org/ns/ldp#Resource>; rel=\"type\"",
+              "<http://www.w3.org/ns/ldp#RDFSource>; rel=\"type\""
+          ],
+          "Vary" => "Accept",
+          "Content-Length" => strlen($content)
+      ];
 
       $index = array_search($responseFormat, array_column($validRdfFormats, 'format'));
       if ($index !== false) {
@@ -176,7 +187,6 @@ class ResourceController implements ControllerProviderInterface
       // This is not a RDF file.
       $contentLength = filesize($path);
       $responseMimeType = mime_content_type($path);
-      $modifiedTime = new \DateTime(date('c', filemtime($path)));
       $headers = [
         "Last-Modified" => $modifiedTime->format(\DateTime::W3C),
         "Content-Type" => $responseMimeType,
@@ -186,8 +196,6 @@ class ResourceController implements ControllerProviderInterface
       ];
 
       if ($doGet) {
-        // Probably best to stream the data out.
-        // http://silex.sensiolabs.org/doc/2.0/usage.html#streaming
         $stream = function () use ($path) {
             readfile($path);
         };
@@ -202,6 +210,8 @@ class ResourceController implements ControllerProviderInterface
   }
 
   /**
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The incoming request.
    * @param $path
    *   Path to file we are serving.
    * @param $responseFormat
@@ -212,9 +222,9 @@ class ResourceController implements ControllerProviderInterface
    *   Whether we are doing a GET or HEAD request.
    * @return \Symfony\Component\HttpFoundation\Response
    */
-  private function getDirectory($path, $responseFormat, array $validRdfFormats, $doGet = false) {
+  private function getDirectory($request, $path, $responseFormat, array $validRdfFormats, $doGet = false) {
 
-    $subject = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+    $subject = $request->getScheme() . "://" . $request->getHttpHost() . $request->getBasePath() . $path;
     $predicate = "http://www.w3.org/ns/ldp#contains";
     $modifiedTime = new \DateTime(date('c', filemtime($path)));
 
