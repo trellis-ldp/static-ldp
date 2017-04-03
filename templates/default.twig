@@ -77,17 +77,21 @@ a:hover {
     <main>
         <p><a href="http://purl.org/dc/terms/modified">dcterms:modified</a> {{ modified }}</p>
         <p><a href="http://www.w3.org/1999/02/22-rdf-syntax-ns#type">rdf:type</a></p>
+        {% if type %}
         <ul>
         {% for t in type %}
             <li><a href="{{ t }}">{{ t }}</a></li>
         {% endfor %}
         </ul>
+        {% endif %}
+        {% if contains %}
         <p><a href="http://www.w3.org/ns/ldp#contains">ldp:contains</a></p>
         <ul>
         {% for c in contains %}
             <li><a href="{{ c }}">{{ c }}</a></li>
         {% endfor %}
         </ul>
+        {% endif %}
     </main>
     <footer> </footer>
 </body>
