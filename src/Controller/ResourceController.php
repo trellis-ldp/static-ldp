@@ -218,7 +218,7 @@ class ResourceController implements ControllerProviderInterface
     $headers = [
       "Link" => ["<http://www.w3.org/ns/ldp#Resource>; rel=\"type\"",
                  "<http://www.w3.org/ns/ldp#BasicContainer>; rel=\"type\""],
-      "Vary" => "Accept, Prefer",
+      "Vary" => "Accept",
       "Content-Type" => $responseMimeType,
     ];
     $namespaces = new \EasyRdf_Namespace();
