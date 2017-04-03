@@ -76,10 +76,11 @@ a:hover {
     </header>
     <main>
         <p><a href="http://purl.org/dc/terms/modified">dcterms:modified</a> {{ modified }}</p>
-        <p><a href="http://www.w3.org/2000/01/rdf-schema#type">rdf:type</a></p>
+        <p><a href="http://www.w3.org/1999/02/22-rdf-syntax-ns#type">rdf:type</a></p>
         <ul>
-            <li><a href="http://www.w3.org/ns/ldp#Resource">ldp:Resource</a></li>
-            <li><a href="http://www.w3.org/ns/ldp#BasicContainer">ldp:BasicContainer</a></li>
+        {% for t in type %}
+            <li><a href="{{ t }}">{{ t }}</a></li>
+        {% endfor %}
         </ul>
         <p><a href="http://www.w3.org/ns/ldp#contains">ldp:contains</a></p>
         <ul>

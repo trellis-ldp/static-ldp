@@ -240,6 +240,8 @@ class ResourceController implements ControllerProviderInterface
 
         $graph = new \EasyRdf_Graph();
         $graph->addLiteral($subject, "http://purl.org/dc/terms/modified", $modifiedTime);
+        $graph->addResource($subject, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/ns/ldp#Resource");
+        $graph->addResource($subject, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/ns/ldp#BasicContainer");
 
         foreach (new \DirectoryIterator($path) as $fileInfo) {
             if ($fileInfo->isDot()) {
@@ -276,16 +278,14 @@ class ResourceController implements ControllerProviderInterface
         $options = [
             "compact" => true,
             "context" => (object) [
-                'dcterms' => 'http://purl.org/dc/terms/',
-                'ldp' => 'http://www.w3.org/ns/ldp#',
-                'xsd' => 'http://www.w3.org/2001/XMLSchema#',
                 'id' => '@id',
+                'type' => '@type',
                 'modified' => (object) [
-                    '@id' => 'dcterms:modified',
-                    '@type' => 'xsd:dateTime'
+                    '@id' => 'http://purl.org/dc/terms/modified',
+                    '@type' => 'http://www.w3.org/2001/XMLSchema#dateTime'
                 ],
                 'contains' => (object) [
-                    '@id' => 'ldp:contains',
+                    '@id' => 'http://www.w3.org/ns/ldp#contains',
                     '@type' => '@id'
                 ]
             ]
