@@ -70,7 +70,6 @@ class ResourceController implements ControllerProviderInterface
             }
         }
 
-
         // It is a file.
         if (is_file($requested_path)) {
             $response = $this->getFile(
@@ -81,7 +80,8 @@ class ResourceController implements ControllerProviderInterface
                 $app['config']['validRdfFormats'],
                 $request->getMethod() == 'GET'
             );
-        } else if (strpos($request->headers->get('Accept'), "text/html") !== false) {
+        } elseif (strpos($request->headers->get('Accept'), "text/html") !== false) {
+            // Assume it is a directory
             $response = $this->getDirectoryHTML(
                 $app,
                 $request,
