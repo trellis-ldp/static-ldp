@@ -33,9 +33,6 @@ class ResourceController implements ControllerProviderInterface
       ->value('path', '')
       ->bind('staticldp.resourceGetOrHead');
 
-
-
-
     return $controllers;
   }
 

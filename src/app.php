@@ -26,4 +26,17 @@ $app->register(new TwigServiceProvider(), array(
 ));
 $app->mount("/", new ResourceController());
 
+$app->error(function (\Exception $e, Request $req, $code) {
+    $headers = [];
+    switch ($code) {
+    case (405):
+        $message = "Method Not Allowed";
+        $headers["Link"] = "<http://acdc.amherst.edu/ns/trellis#ReadOnlyResource>; rel=\"http://www.w3.org/ns/ldp#constrainedBy\"";
+        break;
+    default:
+        $message = "Something went wrong";
+    }
+    return new Response($message, $code, $headers);
+});
+
 return $app;
