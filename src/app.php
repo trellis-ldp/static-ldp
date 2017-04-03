@@ -25,7 +25,7 @@ $app['basePath'] = __DIR__;
 $app->register(new ServiceControllerServiceProvider());
 $app->register(new ServiceProvider());
 $app->register(new TwigServiceProvider(), array(
-  'twig.path' => __DIR__ . '/templates',
+  'twig.path' => __DIR__ . '/../templates',
 ));
 $app->mount("/", new ResourceController());
 
