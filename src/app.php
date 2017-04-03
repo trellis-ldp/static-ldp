@@ -6,7 +6,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use Silex\Application;
 use Psr\Http\Message\ResponseInterface;
-use Islandora\Crayfish\Provider\CrayfishProvider;
 use Silex\Provider\ServiceControllerServiceProvider;
 use Silex\Provider\TwigServiceProvider;
 use Trellis\StaticLdp\Controller\ResourceController;
