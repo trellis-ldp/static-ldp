@@ -15,26 +15,32 @@ class ResourceController implements ControllerProviderInterface
    */
   public function connect(Application $app)
   {
-    $controllers = $app['controllers_factory'];
-    //
-    // Define routing referring to controller services
-    //
+	
+	// Closesure  makes sure that all paths look the same
+  // Normally we would normalize adding one Slash at the end
+  // but we need to match filestructures here.
+	$normalizepath = function ($path, Request $request) use ($app) {
+            return rtrim($path, '/');
+        };
 
-    // Options
-    $controllers->options("/{path}", "staticldp.resourcecontroller:options")
+    // Apply same middleware to all Methods on this controller collection
+    // @TODO: clean of dots the route. Of matching files with extensions
+    // becomes impossible. Related to _format parameter-
+    $controllers = $app['controllers_factory']
       ->assert('path', '.+')
       ->value('path', '')
+      ->convert('path', $normalizepath);
+
+    // Define routing referring to controller services
+	
+    // Options
+    $controllers->options("/{path}", "staticldp.resourcecontroller:options")
       ->bind('staticldp.serverOptions');
 
     // Generic GET.
     $controllers->match("/{path}", "staticldp.resourcecontroller:getOrHead")
       ->method('HEAD|GET')
-      ->assert('path', '.+')
-      ->value('path', '')
       ->bind('staticldp.resourceGetOrHead');
-
-
-
 
     return $controllers;
   }
@@ -60,6 +66,8 @@ class ResourceController implements ControllerProviderInterface
 
     $format = "text/turtle";
 
+    $filename = NULL;
+
     if ($request->headers->has('accept') && array_key_exists($request->headers->get('accept'), $valid_types)) {
       $format = $request->headers->get('accept');
     }
@@ -76,17 +84,28 @@ class ResourceController implements ControllerProviderInterface
 
     // It is a file.
     if (is_file($requested_path)) {
+      $filename = explode("/", $requested_path);
+      $filename = end($filename);
       $mimeType = mime_content_type($requested_path);
       $headers = [
         "Link" => "<http://www.w3.org/ns/ldp#NonRDFSource>; rel=\"type\"",
         "Content-Type" => $mimeType,
         "Content-Length" => filesize($requested_path),
+        "Content-Disposition" => "attachment; filename=\"{$filename}\"", 
       ];
       // Only read if we are going to use it.
       if ($request->getMethod() == 'GET') {
-        // Probably best to stream the data out.
-        // http://silex.sensiolabs.org/doc/2.0/usage.html#streaming
-        $content = file_get_contents($requested_path);
+     
+        $stream = function () use ($requested_path) {
+        readfile($requested_path);
+        
+        };
+        // @TODO not sure if streaming and Etags are friends
+        // sha1 can be used incrementally, need to research.
+        // Should cache the ETag in a dot file?
+        return $app->stream($stream, 200, $headers)
+          ->setEtag(sha1_file($requested_path),false)
+          ->setLastModified(\DateTime::createFromFormat('U', filemtime($requested_path)));
       }
     } else {
       // Else we assume it is a directory.
@@ -95,7 +114,7 @@ class ResourceController implements ControllerProviderInterface
 
       $graph = new \EasyRdf_Graph();
 
-      $subject = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+      $subject = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath() . $path;
       $predicate = "http://www.w3.org/ns/ldp#contains";
 
       $headers = [
@@ -110,12 +129,19 @@ class ResourceController implements ControllerProviderInterface
       }
       $content = $graph->serialise($valid_types[$format]);
       $headers["Content-Length"] = strlen($content);
+      $response = new Response($content, 200, $headers);
     }
 
     if ($request->getMethod() == "HEAD") {
       $content = "";
+      $response = new Response($content, 200, $headers);
+      if ($filename) {
+        // This makes HEAD slow. We should cache our ETag
+        $response = $response->setEtag(sha1_file($requested_path), false)
+          ->setLastModified(\DateTime::createFromFormat('U', filemtime($requested_path)));
+      }
     }
-    return new Response($content, 200, $headers);
+    return $response;
   }
 
   /**
