@@ -15,7 +15,7 @@ If a static file is a RDF file, then it is served as an `ldp:RDFSource`.
 
 ## Requirements
 
-* PHP 5.6+
+* PHP 5.5+
 * [Composer](https://getcomposer.org/)
 
 ## Installation
