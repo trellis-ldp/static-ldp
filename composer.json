@@ -4,10 +4,11 @@
         "symfony/config": "^3.0",
         "symfony/yaml": "^3.0",
         "easyrdf/easyrdf": "^0.9.1",
-        "ml/json-ld": "^1.0"
+        "ml/json-ld": "^1.0",
+        "twig/twig": "^1.0"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "2.*"
+        "squizlabs/php_codesniffer": "2.0"
     },
     "autoload": {
         "psr-4": {"Trellis\\StaticLdp\\": "src/"}

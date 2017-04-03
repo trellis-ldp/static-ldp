@@ -81,6 +81,13 @@ class ResourceController implements ControllerProviderInterface
                 $app['config']['validRdfFormats'],
                 $request->getMethod() == 'GET'
             );
+        } else if (strpos($request->headers->get('Accept'), "text/html") !== false) {
+            $response = $this->getDirectoryHTML(
+                $app,
+                $request,
+                $requested_path,
+                $request->getMethod() == 'GET'
+            );
         } else {
             // We assume it's a directory.
             $response = $this->getDirectory(
@@ -88,7 +95,7 @@ class ResourceController implements ControllerProviderInterface
                 $requested_path,
                 $responseFormat,
                 $app['config']['validRdfFormats'],
-                ($request->getMethod() == 'GET')
+                $request->getMethod() == 'GET'
             );
         }
         return $response;
@@ -219,31 +226,14 @@ class ResourceController implements ControllerProviderInterface
      *   The incoming request.
      * @param $path
      *   Path to file we are serving.
-     * @param $responseFormat
-     *   The format to respond in, if it is a RDFSource.
-     * @param array $validRdfFormats
-     *   The configured validRdfFormats.
-     * @param boolean $doGet
-     *   Whether we are doing a GET or HEAD request.
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \EasyRDF_Graph
      */
-    private function getDirectory($request, $path, $responseFormat, array $validRdfFormats, $doGet = false)
+    private function getGraphForPath(Request $request, $path)
     {
         $subject = $request->getUri();
         $predicate = "http://www.w3.org/ns/ldp#contains";
         $modifiedTime = new \DateTime(date('c', filemtime($path)));
 
-        $index = array_search($responseFormat, array_column($validRdfFormats, 'format'));
-        if ($index !== false) {
-            $responseMimeType = $validRdfFormats[$index]['mimeType'];
-        }
-        $headers = [
-            "Last-Modified" => $modifiedTime->format(\DateTime::W3C),
-            "Link" => ["<http://www.w3.org/ns/ldp#Resource>; rel=\"type\"",
-                       "<http://www.w3.org/ns/ldp#BasicContainer>; rel=\"type\""],
-            "Vary" => "Accept",
-            "Content-Type" => $responseMimeType,
-        ];
         $namespaces = new \EasyRdf_Namespace();
         $namespaces->set("ldp", "http://www.w3.org/ns/ldp#");
         $namespaces->set("dc", "http://purl.org/dc/terms/");
@@ -258,8 +248,83 @@ class ResourceController implements ControllerProviderInterface
             $filename = rtrim($subject, '/') . '/' . ltrim($fileInfo->getFilename(), '/');
             $graph->addResource($subject, $predicate, $filename);
         }
+        return $graph;
+    }
 
-        $content = $graph->serialise($responseFormat);
+    /**
+     * @param \Silex\Application $app
+     *   The Silex application.
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *   The incoming request.
+     * @param $path
+     *   Path to file we are serving.
+     * @param boolean $doGet
+     *   Whether we are doing a GET or HEAD request.
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    private function getDirectoryHTML(Application $app, Request $request, $path, $doGet = false)
+    {
+        $modifiedTime = new \DateTime(date('c', filemtime($path)));
+        $headers = [
+            "Last-Modified" => $modifiedTime->format(\DateTime::W3C),
+            "Link" => ["<http://www.w3.org/ns/ldp#Resource>; rel=\"type\"",
+                       "<http://www.w3.org/ns/ldp#BasicContainer>; rel=\"type\""],
+            "Vary" => "Accept",
+            "Content-Type" => "text/html"
+        ];
+
+        $options = [
+            "compact" => true,
+            "context" => (object) [
+                'dcterms' => 'http://purl.org/dc/terms/',
+                'ldp' => 'http://www.w3.org/ns/ldp#',
+                'xsd' => 'http://www.w3.org/2001/XMLSchema#',
+                'id' => '@id',
+                'modified' => (object) [
+                    '@id' => 'dcterms:modified',
+                    '@type' => 'xsd:dateTime'
+                ],
+                'contains' => (object) [
+                    '@id' => 'ldp:contains',
+                    '@type' => '@id'
+                ]
+            ]
+        ];
+
+        $jsonld = $this->getGraphForPath($request, $path)->serialise("jsonld", $options);
+        return $app['twig']->render('rdf.twig', json_decode($jsonld, true));
+    }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *   The incoming request.
+     * @param $path
+     *   Path to file we are serving.
+     * @param $responseFormat
+     *   The format to respond in, if it is a RDFSource.
+     * @param array $validRdfFormats
+     *   The configured validRdfFormats.
+     * @param boolean $doGet
+     *   Whether we are doing a GET or HEAD request.
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    private function getDirectory($request, $path, $responseFormat, array $validRdfFormats, $doGet = false)
+    {
+        $modifiedTime = new \DateTime(date('c', filemtime($path)));
+
+        $index = array_search($responseFormat, array_column($validRdfFormats, 'format'));
+        if ($index !== false) {
+            $responseMimeType = $validRdfFormats[$index]['mimeType'];
+        }
+        $headers = [
+            "Last-Modified" => $modifiedTime->format(\DateTime::W3C),
+            "Link" => ["<http://www.w3.org/ns/ldp#Resource>; rel=\"type\"",
+                       "<http://www.w3.org/ns/ldp#BasicContainer>; rel=\"type\""],
+            "Vary" => "Accept",
+            "Content-Type" => $responseMimeType,
+        ];
+
+        $content = $this->getGraphForPath($request, $path)->serialise($responseFormat);
         $headers["Content-Length"] = strlen($content);
         if (!$doGet) {
             $content = '';

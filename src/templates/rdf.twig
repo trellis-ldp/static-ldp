@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>{{ id }}</title>
+<style>
+body {
+	margin: 0;
+	padding: 0;
+	font-size: 1rem;
+	font-family: Lato, Helvetica, Arial, sans-serif;
+	line-height: 150%;
+	color: #555;
+	box-sizing: border-box;
+}
+main {
+    margin-bottom: 40px;
+    margin: 0 20px;
+}
+header, footer {
+	background-color: #4D2F71; /* $purple */;
+	color: white;
+	font-size: .9em;
+}
+header {
+    padding: 30px 0 0 30px;
+    min-height: 80px;
+}
+header h1 {
+    color: #fff;
+}
+footer {
+	padding: 2em;
+	text-align: center;
+	min-height: 1.6em;
+}
+footer a, header a {
+	color: white;
+	text-decoration: none;
+	padding-bottom: .125em;
+	border: 0;
+}
+footer a:hover, header a:hover {
+    color: #ddd;
+	text-decoration: none;
+	padding-bottom: .125em;
+	border-bottom: 1px solid #ddd;
+}
+h1 {
+	color: #34204D; /* $purple-dark */
+	line-height: 130%;
+  	font-size: 2.6rem;
+  	letter-spacing: -.02em;
+	font-weight: 400;
+	margin-top: 0;
+}
+p {
+  margin: 10px;
+}
+a {
+	color: #7800a0; /* $purple-bright, used only for links */
+	text-decoration: none;
+	padding-bottom: .125em;
+	border-bottom: 1px solid #DFBFFF;
+}
+a:hover {
+	color: #4D2F71; /* $purple */
+	border-bottom: 1px solid #4D2F71;
+}
+</style>
+</head>
+<body>
+	<header>
+	    <h1>{{ id }}</h1>
+	</header>
+	<main>
+		<p><a href="http://purl.org/dc/terms/modified">dcterms:modified</a> {{ modified }}</p>
+        <p><a href="http://www.w3.org/2000/01/rdf-schema#type">rdf:type</a></p>
+		<ul>
+            <li><a href="http://www.w3.org/ns/ldp#Resource">ldp:Resource</a></li>
+            <li><a href="http://www.w3.org/ns/ldp#BasicContainer">ldp:BasicContainer</a></li>
+        </ul>
+		<p><a href="http://www.w3.org/ns/ldp#contains">ldp:contains</a></p>
+		<ul>
+		{% for c in contains %}
+	        <li><a href="{{ c }}">{{ c }}</a></li>
+		{% endfor %}
+		</ul>
+	</main>
+	<footer> </footer>
+</body>
+</html>
