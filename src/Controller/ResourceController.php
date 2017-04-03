@@ -173,7 +173,9 @@ class ResourceController implements ControllerProviderInterface
       // This is not a RDF file.
       $contentLength = filesize($path);
       $responseMimeType = mime_content_type($path);
+      $modifiedTime = new \DateTime(date('c', filemtime($path)));
       $headers = [
+        "Last-Modified" => $modifiedTime->format(\DateTime::W3C),
         "Content-Type" => $responseMimeType,
         "Link" => ["<http://www.w3.org/ns/ldp#Resource>; rel=\"type\"",
                    "<http://www.w3.org/ns/ldp#NonRDFSource>; rel=\"type\""],
@@ -207,12 +209,14 @@ class ResourceController implements ControllerProviderInterface
 
     $subject = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
     $predicate = "http://www.w3.org/ns/ldp#contains";
+    $modifiedTime = new \DateTime(date('c', filemtime($path)));
 
     $index = array_search($responseFormat, array_column($validRdfFormats, 'format'));
     if ($index !== false) {
       $responseMimeType = $validRdfFormats[$index]['mimeType'];
     }
     $headers = [
+      "Last-Modified" => $modifiedTime->format(\DateTime::W3C),
       "Link" => ["<http://www.w3.org/ns/ldp#Resource>; rel=\"type\"",
                  "<http://www.w3.org/ns/ldp#BasicContainer>; rel=\"type\""],
       "Vary" => "Accept",
@@ -223,7 +227,7 @@ class ResourceController implements ControllerProviderInterface
     $namespaces->set("dc", "http://purl.org/dc/terms/");
 
     $graph = new \EasyRdf_Graph();
-    $graph->addLiteral($subject, "http://purl.org/dc/terms/modified", new \DateTime(date('c', filemtime($path))));
+    $graph->addLiteral($subject, "http://purl.org/dc/terms/modified", $modifiedTime);
 
     foreach (new \DirectoryIterator($path) as $fileInfo) {
       if ($fileInfo->isDot()) {
