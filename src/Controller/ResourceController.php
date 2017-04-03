@@ -157,7 +157,8 @@ class ResourceController implements ControllerProviderInterface
     if ($index !== FALSE) {
       // This is a RDF file.
       $inputFormat = $validRdfFormats[$index]['format'];
-      $headers["Link"] = "<http://www.w3.org/ns/ldp#RDFSource>; rel=\"type\"";
+      $headers["Link"] = ["<http://www.w3.org/ns/ldp#Resource>; rel=\"type\"",
+                          "<http://www.w3.org/ns/ldp#RDFSource>; rel=\"type\""];
       $headers["Vary"] = "Accept";
       $subject = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
 
@@ -177,7 +178,8 @@ class ResourceController implements ControllerProviderInterface
       $responseMimeType = mime_content_type($path);
       $headers = [
         "Content-Type" => $responseMimeType,
-        "Link" => "<http://www.w3.org/ns/ldp#NonRDFSource>; rel=\"type\"",
+        "Link" => ["<http://www.w3.org/ns/ldp#Resource>; rel=\"type\"",
+                   "<http://www.w3.org/ns/ldp#NonRDFSource>; rel=\"type\""],
         "Content-Length" => $contentLength,
       ];
 
@@ -214,7 +216,8 @@ class ResourceController implements ControllerProviderInterface
       $responseMimeType = $validRdfFormats[$index]['mimeType'];
     }
     $headers = [
-      "Link" => "<http://www.w3.org/ns/ldp#BasicContainer>; rel=\"type\"",
+      "Link" => ["<http://www.w3.org/ns/ldp#Resource>; rel=\"type\"",
+                 "<http://www.w3.org/ns/ldp#BasicContainer>; rel=\"type\""],
       "Vary" => "Accept, Prefer",
       "Content-Type" => $responseMimeType,
     ];
