@@ -168,11 +168,10 @@ class ResourceController implements ControllerProviderInterface
         if ($index !== false) {
             // This is a RDF file.
             $inputFormat = $validRdfFormats[$index]['format'];
-            $subject = $request->getScheme() . "://" . $request->getHttpHost() . $request->getBasePath() . $path;
 
             // Converting RDF from something to something else.
             $graph = new \EasyRdf_Graph();
-            $graph->parseFile($path, $inputFormat, $subject);
+            $graph->parseFile($path, $inputFormat, $request->getUri());
             $content = $graph->serialise($responseFormat);
 
             $headers = [
