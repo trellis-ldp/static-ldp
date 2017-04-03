@@ -231,7 +231,7 @@ class ResourceController implements ControllerProviderInterface
     private function getDirectory($request, $path, $responseFormat, array $validRdfFormats, $doGet = false)
     {
 
-        $subject = $request->getScheme() . "://" . $request->getHttpHost() . $request->getBasePath() . $path;
+        $subject = $request->getScheme() . "://" . $request->getHttpHost() . $request->getBasePath() . "/";
         $predicate = "http://www.w3.org/ns/ldp#contains";
         $modifiedTime = new \DateTime(date('c', filemtime($path)));
 
