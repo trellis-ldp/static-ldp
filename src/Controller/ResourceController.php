@@ -292,7 +292,9 @@ class ResourceController implements ControllerProviderInterface
         ];
 
         $jsonld = $this->getGraphForPath($request, $path)->serialise("jsonld", $options);
-        return $app['twig']->render('rdf.twig', json_decode($jsonld, true));
+        $template = $app['config']['template'];
+
+        return $app['twig']->render($template, json_decode($jsonld, true));
     }
 
     /**

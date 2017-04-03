@@ -1,4 +1,5 @@
 sourceDirectory: /usr/local/var/temp_files
+template: default.twig
 validRdfFormats:
   - { format: "turtle", mimeType: "text/turtle", extension : "ttl" }
   - { format: "jsonld", mimeType: "application/ld+json", extension: "jsonld" }
