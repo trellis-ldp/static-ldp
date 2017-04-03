@@ -74,6 +74,7 @@ class ResourceController implements ControllerProviderInterface
     // It is a file.
     if (is_file($requested_path)) {
       $response = $this->getFile(
+        $app,
         $requested_path,
         $responseFormat,
         $app['config']['validRdfFormats'],
@@ -133,6 +134,8 @@ class ResourceController implements ControllerProviderInterface
   /**
    * Serve a file from the filesystem.
    *
+   * @param \Silex\Application $app
+   *   The Silex application.
    * @param $path
    *   Path to file we are serving.
    * @param $responseFormat
@@ -143,7 +146,7 @@ class ResourceController implements ControllerProviderInterface
    *   Whether we are doing a GET or HEAD request.
    * @return \Symfony\Component\HttpFoundation\Response
    */
-  private function getFile($path, $responseFormat, array $validRdfFormats, $doGet = false) {
+  private function getFile(Application $app, $path, $responseFormat, array $validRdfFormats, $doGet = false) {
     $headers = [];
     // Plain might be RDF, check the file extension.
     $dirChunks = explode(DIRECTORY_SEPARATOR, $path);
@@ -185,7 +188,11 @@ class ResourceController implements ControllerProviderInterface
       if ($doGet) {
         // Probably best to stream the data out.
         // http://silex.sensiolabs.org/doc/2.0/usage.html#streaming
-        $content = file_get_contents($path);
+        $stream = function () use ($path) {
+            readfile($path);
+        };
+
+        return $app->stream($stream, 200, $headers);
       }
     }
     if (!$doGet) {
