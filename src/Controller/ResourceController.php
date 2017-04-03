@@ -158,6 +158,7 @@ class ResourceController implements ControllerProviderInterface
       // This is a RDF file.
       $inputFormat = $validRdfFormats[$index]['format'];
       $headers["Link"] = "<http://www.w3.org/ns/ldp#RDFSource>; rel=\"type\"";
+      $headers["Vary"] = "Accept";
       $subject = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
 
       // Converting RDF from something to something else.
@@ -214,6 +215,7 @@ class ResourceController implements ControllerProviderInterface
     }
     $headers = [
       "Link" => "<http://www.w3.org/ns/ldp#BasicContainer>; rel=\"type\"",
+      "Vary" => "Accept, Prefer",
       "Content-Type" => $responseMimeType,
     ];
     $namespaces = new \EasyRdf_Namespace();
