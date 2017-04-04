@@ -237,7 +237,7 @@ class ResourceController implements ControllerProviderInterface
                     readfile($requested_path);
                 };
 
-                return $app->stream($stream, 200, $response->headers);
+                return $app->stream($stream, 200, $response->headers->all());
             }
         }
 
