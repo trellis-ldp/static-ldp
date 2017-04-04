@@ -9,31 +9,36 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ResourceController implements ControllerProviderInterface
 {
-    private $LDP_NS = "http://www.w3.org/ns/ldp#";
-    private $RDF_NS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
-    private $DCTERMS_NS = "http://purl.org/dc/terms/";
+    const LDP_NS = "http://www.w3.org/ns/ldp#";
+    const RDF_NS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+    const DCTERMS_NS = "http://purl.org/dc/terms/";
 
+    // Its a class, no need to pass all via arguments around.
+    private $modifiedTime = null;
+    private $contentLength = 0;
+    private $eTag = null;
+    
     /**
      * {@inheritdoc}
      */
     public function connect(Application $app)
     {
-        $controllers = $app['controllers_factory'];
+
+        // Shared Controller collection Middleware
+        $controllers = $app['controllers_factory']
+          ->assert('path', '.+')
+          ->value('path', '');
+
         //
         // Define routing referring to controller services
         //
 
         // Options
         $controllers->options("/{path}", "staticldp.resourcecontroller:options")
-            ->assert('path', '.+')
-            ->value('path', '')
             ->bind('staticldp.serverOptions');
-
         // Generic GET.
         $controllers->match("/{path}", "staticldp.resourcecontroller:getOrHead")
             ->method('HEAD|GET')
-            ->assert('path', '.+')
-            ->value('path', '')
             ->bind('staticldp.resourceGetOrHead');
 
         return $controllers;
@@ -56,6 +61,9 @@ class ResourceController implements ControllerProviderInterface
         // Get default responseFormat.
         $responseFormat = $app['config']['defaultRdfFormat'];
 
+        // Better to define it at the beginning
+        $response = new Response();
+          
         $docroot = $app['config']['sourceDirectory'];
         if (!empty($path)) {
             $path = "/{$path}";
@@ -73,18 +81,30 @@ class ResourceController implements ControllerProviderInterface
             }
         }
 
+        $this->modifiedTime = \DateTime::createFromFormat('U', filemtime($requested_path));
+
         // It is a file.
         if (is_file($requested_path)) {
-            $response = $this->getFile(
-                $app,
-                $request,
-                $requested_path,
-                $responseFormat,
-                $app['config']['validRdfFormats'],
-                $request->getMethod() == 'GET'
-            );
+            // Common to all existing files.
+            //
+            $this->contentLength = filesize($requested_path);
+            $response->setETag($this->provideEtag());
+            $response->setLastModified($this->modifiedTime);
+            $response->headers->set("Vary", "Accept");
+            $response->setPublic();
+           
+            if (!$response->isNotModified($request)) {
+                $response = $this->getFile(
+                    $app,
+                    $request,
+                    $response,
+                    $requested_path,
+                    $responseFormat,
+                    $app['config']['validRdfFormats']
+                );
+            }
         } elseif (strpos($request->headers->get('Accept'), "text/html") !== false) {
-            // Assume it is a directory
+            // Assume it is a directory, a basic container
             $response = $this->getDirectoryHTML(
                 $app,
                 $request,
@@ -101,6 +121,8 @@ class ResourceController implements ControllerProviderInterface
                 $request->getMethod() == 'GET'
             );
         }
+        // We are trusting we have response here
+        
         return $response;
     }
 
@@ -149,30 +171,29 @@ class ResourceController implements ControllerProviderInterface
      *   The Silex application.
      * @param \Symfony\Component\HttpFoundation\Request $request
      *   The incoming request.
-     * @param $path
+     * @param \Symfony\Component\HttpFoundation\Response $response
+     *   The outgoing response.
+     * @param $requested_path,
      *   Path to file we are serving.
      * @param $responseFormat
      *   The format to respond in, if it is a RDFSource.
      * @param array $validRdfFormats
      *   The configured validRdfFormats.
-     * @param boolean $doGet
-     *   Whether we are doing a GET or HEAD request.
      * @return \Symfony\Component\HttpFoundation\Response
      */
     private function getFile(
         Application $app,
         Request $request,
-        $path,
+        Response $response,
+        $requested_path,
         $responseFormat,
-        array $validRdfFormats,
-        $doGet = false
+        array $validRdfFormats
     ) {
-        $headers = [];
         // Plain might be RDF, check the file extension.
-        $dirChunks = explode(DIRECTORY_SEPARATOR, $path);
+        $dirChunks = explode(DIRECTORY_SEPARATOR, $requested_path);
         $filename = array_pop($dirChunks);
         $filenameChunks = explode('.', $filename);
-        $modifiedTime = new \DateTime(date('c', filemtime($path)));
+       
         $extension = array_pop($filenameChunks);
         $index = array_search($extension, array_column($validRdfFormats, 'extension'));
         if ($index !== false) {
@@ -181,47 +202,45 @@ class ResourceController implements ControllerProviderInterface
 
             // Converting RDF from something to something else.
             $graph = new \EasyRdf_Graph();
-            $graph->parseFile($path, $inputFormat, $request->getUri());
+            $graph->parseFile($requested_path, $inputFormat, $request->getUri());
             $content = $graph->serialise($responseFormat);
-
             $headers = [
-                "Last-Modified" => $modifiedTime->format(\DateTime::W3c),
-                "Link" => [
-                    "<{$this->LDP_NS}Resource>; rel=\"type\"",
-                    "<{$this->LDP_NS}RDFSource>; rel=\"type\""
-                ],
-                "Vary" => "Accept",
-                "Content-Length" => strlen($content)
+                "Link" => ["<".self::LDP_NS."Resource>; rel=\"type\"",
+                           "<".self::LDP_NS."RDFSource>; rel=\"type\"" ],
+                "Content-Length" => strlen($content),
             ];
 
             $index = array_search($responseFormat, array_column($validRdfFormats, 'format'));
             if ($index !== false) {
                 $headers['Content-Type'] = $validRdfFormats[$index]['mimeType'];
             }
+            $response->headers->add($headers);
         } else {
             // This is not a RDF file.
-            $contentLength = filesize($path);
-            $responseMimeType = mime_content_type($path);
+            $contentLength = filesize($requested_path);
+            $responseMimeType = mime_content_type($requested_path);
+            $filename = explode("/", $requested_path);
+            $filename = end($filename);
             $headers = [
-                "Last-Modified" => $modifiedTime->format(\DateTime::W3C),
                 "Content-Type" => $responseMimeType,
-                "Link" => ["<{$this->LDP_NS}Resource>; rel=\"type\"",
-                           "<{$this->LDP_NS}NonRDFSource>; rel=\"type\""],
+                "Link" => ["<".self::LDP_NS."Resource>; rel=\"type\"",
+                           "<".self::LDP_NS."NonRDFSource>; rel=\"type\""],
                 "Content-Length" => $contentLength,
+                "Content-Disposition" => "attachment; filename=\"{$filename}\"",
             ];
 
-            if ($doGet) {
+            $response->headers->add($headers);
+
+            if ($request->getMethod() == 'GET') {
                 $stream = function () use ($path) {
                     readfile($path);
                 };
 
-                return $app->stream($stream, 200, $headers);
+                return $app->stream($stream, 200, $response->headers);
             }
         }
-        if (!$doGet) {
-            $content = '';
-        }
-        return new Response($content, 200, $headers);
+
+        return $response;
     }
 
     /**
@@ -234,17 +253,17 @@ class ResourceController implements ControllerProviderInterface
     private function getGraphForPath(Request $request, $path)
     {
         $subject = $request->getUri();
-        $predicate = $this->LDP_NS . "contains";
-        $modifiedTime = new \DateTime(date('c', filemtime($path)));
+        $predicate = self::LDP_NS . "contains";
+        
 
         $namespaces = new \EasyRdf_Namespace();
-        $namespaces->set("ldp", $this->LDP_NS);
-        $namespaces->set("dc", $this->DCTERMS_NS);
+        $namespaces->set("ldp", self::LDP_NS);
+        $namespaces->set("dc", self::DCTERMS_NS);
 
         $graph = new \EasyRdf_Graph();
-        $graph->addLiteral($subject, $this->DCTERMS_NS . "modified", $modifiedTime);
-        $graph->addResource($subject, $this->RDF_NS . "type", $this->LDP_NS . "Resource");
-        $graph->addResource($subject, $this->RDF_NS . "type", $this->LDP_NS . "BasicContainer");
+        $graph->addLiteral($subject, self::DCTERMS_NS . "modified", $this->modifiedTime);
+        $graph->addResource($subject, self::RDF_NS . "type", self::LDP_NS . "Resource");
+        $graph->addResource($subject, self::RDF_NS . "type", self::LDP_NS . "BasicContainer");
 
         foreach (new \DirectoryIterator($path) as $fileInfo) {
             if ($fileInfo->isDot()) {
@@ -269,12 +288,9 @@ class ResourceController implements ControllerProviderInterface
      */
     private function getDirectoryHTML(Application $app, Request $request, $path, $doGet = false)
     {
-        $modifiedTime = new \DateTime(date('c', filemtime($path)));
         $headers = [
-            "Last-Modified" => $modifiedTime->format(\DateTime::W3C),
-            "Link" => ["<{$this->LDP_NS}Resource>; rel=\"type\"",
-                       "<{$this->LDP_NS}BasicContainer>; rel=\"type\""],
-            "Vary" => "Accept",
+            "Link" => ["<".self::LDP_NS."Resource>; rel=\"type\"",
+                       "<".self::LDP_NS."BasicContainer>; rel=\"type\""],
             "Content-Type" => "text/html"
         ];
 
@@ -284,11 +300,11 @@ class ResourceController implements ControllerProviderInterface
                 'id' => '@id',
                 'type' => '@type',
                 'modified' => (object) [
-                    '@id' => $this->DCTERMS_NS . 'modified',
+                    '@id' => self::DCTERMS_NS . 'modified',
                     '@type' => 'http://www.w3.org/2001/XMLSchema#dateTime'
                 ],
                 'contains' => (object) [
-                    '@id' => $this->LDP_NS . 'contains',
+                    '@id' => self::LDP_NS . 'contains',
                     '@type' => '@id'
                 ]
             ]
@@ -315,7 +331,6 @@ class ResourceController implements ControllerProviderInterface
      */
     private function getDirectory(Request $request, $path, $responseFormat, array $validRdfFormats, $doGet = false)
     {
-        $modifiedTime = new \DateTime(date('c', filemtime($path)));
 
         $index = array_search($responseFormat, array_column($validRdfFormats, 'format'));
         if ($index !== false) {
@@ -328,8 +343,8 @@ class ResourceController implements ControllerProviderInterface
             $options = [
                 "compact" => true,
                 "context" => (object) [
-                    'dcterms' => $this->DCTERMS_NS,
-                    'ldp' => $this->LDP_NS,
+                    'dcterms' => self::DCTERMS_NS,
+                    'ldp' => self::LDP_NS,
                     'xsd' => 'http://www.w3.org/2001/XMLSchema#',
                     'id' => '@id',
                     'type' => '@type',
@@ -348,10 +363,9 @@ class ResourceController implements ControllerProviderInterface
         $content = $this->getGraphForPath($request, $path)->serialise($responseFormat, $options);
 
         $headers = [
-            "Last-Modified" => $modifiedTime->format(\DateTime::W3C),
-            "Link" => ["<{$this->LDP_NS}Resource>; rel=\"type\"",
-                       "<{$this->LDP_NS}BasicContainer>; rel=\"type\""],
-            "Vary" => "Accept",
+            "Link" => ["<".self::LDP_NS."Resource>; rel=\"type\"",
+                       "<".self::LDP_NS."BasicContainer>; rel=\"type\""],
+        
             "Content-Type" => $responseMimeType,
             "Content-Length" => strlen($content)
         ];
@@ -363,9 +377,26 @@ class ResourceController implements ControllerProviderInterface
     }
 
     /**
+     * Simple Etag generator for files
+     *
+     * @return array
+     */
+    private function provideEtag()
+    {
+        $etag = function () {
+            // closure preserves scope
+
+            $this->eTag = sha1($this->modifiedTime->format("YmdHis") . $this->contentLength);
+            return $this->eTag;
+        };
+        var_dump($etag());
+        return $this->eTag ? $this->eTag : $etag();
+    }
+
+    /**
      * @param $accept
      *   The accept header
-     * @return true if the request if for compact json-ld; false otherwise
+     * @return true if the request is for compact json-ld; false otherwise
      */
     private function useCompactJsonLd($accept)
     {
