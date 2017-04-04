@@ -195,6 +195,7 @@ class ResourceController implements ControllerProviderInterface
         $filenameChunks = explode('.', $filename);
        
         $extension = array_pop($filenameChunks);
+
         $index = array_search($extension, array_column($validRdfFormats, 'extension'));
         if ($index !== false) {
             // This is a RDF file.
@@ -204,6 +205,7 @@ class ResourceController implements ControllerProviderInterface
             $graph = new \EasyRdf_Graph();
             $graph->parseFile($requested_path, $inputFormat, $request->getUri());
             $content = $graph->serialise($responseFormat);
+            $response->setContent($content);
             $headers = [
                 "Link" => ["<".self::LDP_NS."Resource>; rel=\"type\"",
                            "<".self::LDP_NS."RDFSource>; rel=\"type\"" ],
@@ -232,8 +234,8 @@ class ResourceController implements ControllerProviderInterface
             $response->headers->add($headers);
 
             if ($request->getMethod() == 'GET') {
-                $stream = function () use ($path) {
-                    readfile($path);
+                $stream = function () use ($requested_path) {
+                    readfile($requested_path);
                 };
 
                 return $app->stream($stream, 200, $response->headers);
@@ -246,16 +248,15 @@ class ResourceController implements ControllerProviderInterface
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
      *   The incoming request.
-     * @param $path
+     * @param $requested_path
      *   Path to file we are serving.
      * @return \EasyRDF_Graph
      */
-    private function getGraphForPath(Request $request, $path)
+    private function getGraphForPath(Request $request, $requested_path)
     {
         $subject = $request->getUri();
         $predicate = self::LDP_NS . "contains";
         
-
         $namespaces = new \EasyRdf_Namespace();
         $namespaces->set("ldp", self::LDP_NS);
         $namespaces->set("dc", self::DCTERMS_NS);
@@ -265,7 +266,7 @@ class ResourceController implements ControllerProviderInterface
         $graph->addResource($subject, self::RDF_NS . "type", self::LDP_NS . "Resource");
         $graph->addResource($subject, self::RDF_NS . "type", self::LDP_NS . "BasicContainer");
 
-        foreach (new \DirectoryIterator($path) as $fileInfo) {
+        foreach (new \DirectoryIterator($requested_path) as $fileInfo) {
             if ($fileInfo->isDot()) {
                 continue;
             }
@@ -280,13 +281,11 @@ class ResourceController implements ControllerProviderInterface
      *   The Silex application.
      * @param \Symfony\Component\HttpFoundation\Request $request
      *   The incoming request.
-     * @param $path
+     * @param $requested_path
      *   Path to file we are serving.
-     * @param boolean $doGet
-     *   Whether we are doing a GET or HEAD request.
-     * @return \Symfony\Component\HttpFoundation\Response
+    * @return \Symfony\Component\HttpFoundation\Response
      */
-    private function getDirectoryHTML(Application $app, Request $request, $path, $doGet = false)
+    private function getDirectoryHTML(Application $app, Request $request, $requested_path)
     {
         $headers = [
             "Link" => ["<".self::LDP_NS."Resource>; rel=\"type\"",
@@ -310,7 +309,7 @@ class ResourceController implements ControllerProviderInterface
             ]
         ];
 
-        $jsonld = $this->getGraphForPath($request, $path)->serialise("jsonld", $options);
+        $jsonld = $this->getGraphForPath($request, $requested_path)->serialise("jsonld", $options);
         $template = $app['config']['template'];
 
         return $app['twig']->render($template, json_decode($jsonld, true));
@@ -319,17 +318,15 @@ class ResourceController implements ControllerProviderInterface
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
      *   The incoming request.
-     * @param $path
+     * @param $requested_path
      *   Path to file we are serving.
      * @param $responseFormat
      *   The format to respond in, if it is a RDFSource.
      * @param array $validRdfFormats
      *   The configured validRdfFormats.
-     * @param boolean $doGet
-     *   Whether we are doing a GET or HEAD request.
-     * @return \Symfony\Component\HttpFoundation\Response
+    * @return \Symfony\Component\HttpFoundation\Response
      */
-    private function getDirectory(Request $request, $path, $responseFormat, array $validRdfFormats, $doGet = false)
+    private function getDirectory(Request $request, $requested_path, $responseFormat, array $validRdfFormats)
     {
 
         $index = array_search($responseFormat, array_column($validRdfFormats, 'format'));
@@ -360,24 +357,24 @@ class ResourceController implements ControllerProviderInterface
             ];
         }
 
-        $content = $this->getGraphForPath($request, $path)->serialise($responseFormat, $options);
+        $content = $this->getGraphForPath($request, $requested_path)->serialise($responseFormat, $options);
 
         $headers = [
             "Link" => ["<".self::LDP_NS."Resource>; rel=\"type\"",
                        "<".self::LDP_NS."BasicContainer>; rel=\"type\""],
-        
             "Content-Type" => $responseMimeType,
             "Content-Length" => strlen($content)
         ];
 
-        if (!$doGet) {
-            $content = '';
+        if ($request->getMethod() == 'GET') {
+            $response->setContent($content);
         }
-        return new Response($content, 200, $headers);
+        $response->headers->add($headers);
+        return $response;
     }
 
     /**
-     * Simple Etag generator for files
+     * Simple Convulsive Etag generator for files
      *
      * @return array
      */
@@ -385,11 +382,9 @@ class ResourceController implements ControllerProviderInterface
     {
         $etag = function () {
             // closure preserves scope
-
             $this->eTag = sha1($this->modifiedTime->format("YmdHis") . $this->contentLength);
             return $this->eTag;
         };
-        var_dump($etag());
         return $this->eTag ? $this->eTag : $etag();
     }
 
