@@ -108,17 +108,16 @@ class ResourceController implements ControllerProviderInterface
             $response = $this->getDirectoryHTML(
                 $app,
                 $request,
-                $requested_path,
-                $request->getMethod() == 'GET'
+                $requested_path
             );
         } else {
             // We assume it's a directory.
             $response = $this->getDirectory(
                 $request,
+                $response,
                 $requested_path,
                 $responseFormat,
-                $app['config']['validRdfFormats'],
-                $request->getMethod() == 'GET'
+                $app['config']['validRdfFormats']
             );
         }
         // We are trusting we have response here
@@ -318,6 +317,8 @@ class ResourceController implements ControllerProviderInterface
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
      *   The incoming request.
+     * @param \Symfony\Component\HttpFoundation\Response $response
+     *   The outgoing response.
      * @param $requested_path
      *   Path to file we are serving.
      * @param $responseFormat
@@ -326,8 +327,14 @@ class ResourceController implements ControllerProviderInterface
      *   The configured validRdfFormats.
     * @return \Symfony\Component\HttpFoundation\Response
      */
-    private function getDirectory(Request $request, $requested_path, $responseFormat, array $validRdfFormats)
-    {
+    private function getDirectory(
+        Request $request,
+        Response $response,
+        $requested_path,
+        $responseFormat,
+        array $validRdfFormats
+    ) {
+    
 
         $index = array_search($responseFormat, array_column($validRdfFormats, 'format'));
         if ($index !== false) {
