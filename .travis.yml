@@ -5,9 +5,14 @@ php:
     - 7.0
     - 7.1
 
+branches:
+  only:
+    - /^master$/
+
 before_install:
   - composer install
 
 script:
-  - php vendor/bin/phpcs --standard=PSR2 src
+  - php vendor/bin/phpcs --standard=PSR2 src test
+  - php vendor/bin/phpunit
 

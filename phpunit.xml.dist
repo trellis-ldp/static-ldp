@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<phpunit bootstrap="./test/bootstrap.php" colors="true">
+    <testsuites>
+        <testsuite name="unit">
+            <directory>test</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+      <whitelist processUncoveredFilesFromWhitelist="true">
+        <directory suffix=".php">src</directory>
+        <exclude>
+          <file>index.php</file>
+          <file>src/app.php</file>
+        </exclude>
+      </whitelist>
+    </filter>
+    <logging>
+      <log type="coverage-clover" target="coverage.xml"/>
+    </logging>
+</phpunit>
