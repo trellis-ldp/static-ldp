@@ -18,7 +18,7 @@ date_default_timezone_set('UTC');
 
 $app = new Application();
 
-$app['configDir'] = __DIR__ .'/../config';
+$app['basePath'] = __DIR__;
 $app->register(new ServiceControllerServiceProvider());
 $app->register(new ServiceProvider());
 $app->register(new TwigServiceProvider(), array(

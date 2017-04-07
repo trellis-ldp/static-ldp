@@ -10,6 +10,8 @@ branches:
 
 before_install:
   - composer install
+  - mkdir -p config
+  - cp test/resources/config/settings.yml config
 
 script:
   - php vendor/bin/phpcs --standard=PSR2 src test
