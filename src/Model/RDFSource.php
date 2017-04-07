@@ -38,19 +38,10 @@ class RDFSource extends Resource
                 $graph = new \EasyRdf_Graph();
                 $graph->parseFile($this->path, $this->getInputFormat(), $request->getURI());
                 if ($this->responseType == "html") {
-                    $options = [
-                        "compact" => true,
-                        "context" => (object) array_merge($app['config']['prefixes'], [
-                            "id" => '@id',
-                            'type' => '@type',
-                            'value' => '@value',
-                            'language' => '@language'])
-                    ];
-                    $content = $graph->serialise("jsonld", $options);
+                    $data = json_decode($graph->serialise("jsonld"), true);
+                    $dataset = $this->mapJsonLdForHTML($data, $app['config']['prefixes']);
                     $template = $app['config']['template'];
-                    $data = json_decode($content, true);
-                    return $app['twig']->render($template, ["id" => $request->getURI(), "data" => $data]);
-                    $res->setContent($content);
+                    return $app['twig']->render($template, ["id" => $request->getURI(), "dataset" => $dataset]);
                 } else {
                     $res->setContent($graph->serialise($this->responseType));
                 }

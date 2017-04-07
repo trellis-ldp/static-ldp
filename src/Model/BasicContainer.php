@@ -76,9 +76,10 @@ class BasicContainer extends Resource
                     ]
                 ];
 
-                $content = $graph->serialise("jsonld", $options);
+                $data = json_decode($graph->serialise("jsonld"), true);
+                $dataset = $this->mapJsonLdForHTML($data, $app['config']['prefixes']);
                 $template = $app['config']['template'];
-                return $app['twig']->render($template, json_decode($content, true));
+                return $app['twig']->render($template, ["id" => $subject, "dataset" => $dataset]);
             } else {
                 $content = $graph->serialise($this->responseType);
             }
