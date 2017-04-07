@@ -23,11 +23,7 @@ class ServiceProvider implements ServiceProviderInterface
 
         if (!isset($app['config'])) {
             $processor = new Processor();
-            if (isset($_ENV['configDir']) && file_exists($_ENV['configDir'])) {
-                $confFile = $_ENV['configDir'] . "/settings.yml";
-            } else {
-                $confFile = $app['basePath'] . '/../config/settings.yml';
-            }
+            $confFile = $app['configDir'] . "/settings.yml";
             $userConf = file_exists($confFile) ? [Yaml::parse(file_get_contents($confFile))] : [];
             $app['config'] = $processor->processConfiguration(new TrellisConfiguration(), $userConf);
         }
