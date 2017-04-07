@@ -32,10 +32,6 @@ class ResourceController implements ControllerProviderInterface
           ->assert('path', '.+')
           ->value('path', '');
 
-        //
-        // Define routing referring to controller services
-        //
-
         // Options
         $controllers->options("/{path}", "staticldp.resourcecontroller:options")
             ->bind('staticldp.serverOptions');
@@ -48,15 +44,7 @@ class ResourceController implements ControllerProviderInterface
     }
 
     /**
-     * Perform the GET or HEAD request.
-     *
-     * @param \Silex\Application $app
-     *   The Silex application.
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *   The incoming request.
-     * @param $path
-     *   The path parameter from the request.
-     * @return \Symfony\Component\HttpFoundation\Response
+     * {@inheritdoc}
      */
     public function get(Application $app, Request $request, $path)
     {

@@ -11,8 +11,28 @@ abstract class Resource
     const RDF_NS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
     const DCTERMS_NS = "http://purl.org/dc/terms/";
 
+    /**
+     * Get a representation of the given resource
+     *
+     * @param \Silex\Application $app
+     *   The Silex application.
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *   The incoming request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     abstract public function get(Application $app, Request $request);
 
+    /**
+     * Map an expanded JSON-LD datastructure into a format
+     * suitable for the HTML templating system
+     *
+     * @param $jsonld
+     *      The expanded JSON-LD parsed into a PHP array
+     * @param $prefixes
+     *      User-defined prefixes to use
+     * @return Array
+     *      A new array suitable for the Twig templates
+     */
     protected function mapJsonLdForHTML($jsonld, $prefixes)
     {
         $namespaces = new \EasyRdf_Namespace();

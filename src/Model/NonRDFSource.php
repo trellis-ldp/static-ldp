@@ -14,6 +14,9 @@ class NonRDFSource extends Resource
         $this->contentDisposition = $contentDisposition;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function get(Application $app, Request $request)
     {
         $filename = $this->path;

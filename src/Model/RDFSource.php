@@ -21,6 +21,9 @@ class RDFSource extends Resource
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function get(Application $app, Request $request)
     {
         $res = new Response();
