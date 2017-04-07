@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class NonRDFSource extends Resource
 {
-    public function __construct($path, $contentDisposition=true)
+    public function __construct($path, $contentDisposition = true)
     {
         $this->path = $path;
         $this->contentDisposition = $contentDisposition;
