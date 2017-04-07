@@ -19,6 +19,11 @@ date_default_timezone_set('UTC');
 $app = new Application();
 
 $app['basePath'] = __DIR__;
+if (isset($_ENV['TRELLIS_CONFIG_DIR']) && file_exists($_ENV['TRELLIS_CONFIG_DIR'])) {
+    $app['configDir'] = $_ENV['TRELLIS_CONFIG_DIR'];
+} else {
+    $app['configDir'] = __DIR__ . '/../config';
+}
 $app->register(new ServiceControllerServiceProvider());
 $app->register(new ServiceProvider());
 $app->register(new TwigServiceProvider(), array(
