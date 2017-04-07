@@ -32,11 +32,20 @@ class RDFSource extends Resource
         $res->setEtag($this->getEtag());
         if (!$res->isNotModified($request)) {
             if ($this->canStream()) {
-                $filename = $this->path;
-                $stream = function () use ($filename) {
-                    readfile($filename);
-                };
-                return $app->stream($stream, 200, $res->headers->all());
+                // Apache httpd doesn't support the Expect header
+                // for anything that isn't 100-continue.
+                $expect = $request->headers->get('x-expect');
+                $expects202 = strpos($expect, "202-digest") === 0;
+                if (!$this->verifyDigest($expect)) {
+                    $res->setStatusCode(417);
+                    $res->setContent("Entity digest failed");
+                } else {
+                    $filename = $this->path;
+                    $stream = function () use ($filename) {
+                        readfile($filename);
+                    };
+                    return $app->stream($stream, 200, $res->headers->all());
+                }
             } else {
                 $graph = new \EasyRdf_Graph();
                 $graph->parseFile($this->path, $this->getInputFormat(), $request->getURI());
