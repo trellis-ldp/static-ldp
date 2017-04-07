@@ -27,6 +27,10 @@ class ServiceProvider implements ServiceProviderInterface
             $app['config'] = function ($app) {
                 $configFile = $app['basePath'] . '/../config/settings.yml';
                 $settings = Yaml::parse(file_get_contents($configFile));
+                if ($app['env'] == 'test') {
+                  // Alter sourceDirectory for testing.
+                    $settings['sourceDirectory'] = $app['basePath'] . '/../test/resources/test_directory';
+                }
                 return $settings;
             };
         }

@@ -18,6 +18,7 @@ date_default_timezone_set('UTC');
 
 $app = new Application();
 
+$app['env'] = isset($_ENV['env']) ? $_ENV['env'] : 'prod';
 $app['debug'] = false;
 $app['basePath'] = __DIR__;
 $app->register(new ServiceControllerServiceProvider());
