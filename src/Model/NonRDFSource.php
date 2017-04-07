@@ -8,9 +8,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class NonRDFSource extends Resource
 {
-    public function __construct($path)
+    public function __construct($path, $contentDisposition=true)
     {
         $this->path = $path;
+        $this->contentDisposition = $contentDisposition;
     }
 
     public function get(Application $app, Request $request)
@@ -32,14 +33,17 @@ class NonRDFSource extends Resource
 
     private function getHeaders()
     {
-        $filename = basename($this->path);
-        return [
+        $headers = [
             "Content-Type" => mime_content_type($this->path),
             "Link" => ["<".self::LDP_NS."Resource>; rel=\"type\"",
                        "<".self::LDP_NS."NonRDFSource>; rel=\"type\""],
             "Content-Length" => filesize($this->path),
-            "Content-Disposition" => "attachment; filename=\"{$filename}\""
         ];
+        if ($this->contentDisposition) {
+            $filename = basename($this->path);
+            $headers['Content-Disposition'] = "attachment; filename=\"{$filename}\"";
+        }
+        return $headers;
     }
 
     private function getEtag()

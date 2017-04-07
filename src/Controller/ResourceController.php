@@ -104,7 +104,7 @@ class ResourceController implements ControllerProviderInterface
     }
 
     /**
-     * Find the valid mimeType and
+     * Find the valid RDF format
      *
      * @param array $validRdfFormats
      *   Supported formats from the config.
@@ -131,6 +131,17 @@ class ResourceController implements ControllerProviderInterface
         return null;
     }
 
+    /**
+     * Find the mimeType for the request
+     *
+     * @param array $validRdfFormats
+     *   Supported formats from the config.
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *   The current request.
+     *
+     * @return string
+     *   MimeType or null if not defined.
+     */
     private function getResponseMimeType(array $validRdfFormats, Request $request)
     {
         if ($request->headers->has('accept')) {
@@ -146,45 +157,5 @@ class ResourceController implements ControllerProviderInterface
             }
         }
         return null;
-    }
-
-
-    /**
-     * @param \Silex\Application $app
-     *   The Silex application.
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *   The incoming request.
-     * @param $requested_path
-     *   Path to file we are serving.
-    * @return \Symfony\Component\HttpFoundation\Response
-     */
-    private function getDirectoryHTML(Application $app, Request $request, $requested_path)
-    {
-        $headers = [
-            "Link" => ["<".self::LDP_NS."Resource>; rel=\"type\"",
-                       "<".self::LDP_NS."BasicContainer>; rel=\"type\""],
-            "Content-Type" => "text/html"
-        ];
-
-        $options = [
-            "compact" => true,
-            "context" => (object) [
-                'id' => '@id',
-                'type' => '@type',
-                'modified' => (object) [
-                    '@id' => self::DCTERMS_NS . 'modified',
-                    '@type' => 'http://www.w3.org/2001/XMLSchema#dateTime'
-                ],
-                'contains' => (object) [
-                    '@id' => self::LDP_NS . 'contains',
-                    '@type' => '@id'
-                ]
-            ]
-        ];
-
-        $jsonld = $this->getGraphForPath($request, $requested_path)->serialise("jsonld", $options);
-        $template = $app['config']['template'];
-
-        return $app['twig']->render($template, json_decode($jsonld, true));
     }
 }

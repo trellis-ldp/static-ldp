@@ -75,9 +75,11 @@ a:hover {
         <h1>{{ id }}</h1>
     </header>
     <main>
+        {% if modified %}
         <p><a href="http://purl.org/dc/terms/modified">dcterms:modified</a> {{ modified }}</p>
-        <p><a href="http://www.w3.org/1999/02/22-rdf-syntax-ns#type">rdf:type</a></p>
+        {% endif %}
         {% if type %}
+        <p><a href="http://www.w3.org/1999/02/22-rdf-syntax-ns#type">rdf:type</a></p>
         <ul>
         {% for t in type %}
             <li><a href="{{ t }}">{{ t }}</a></li>
@@ -91,6 +93,30 @@ a:hover {
             <li><a href="{{ c }}">{{ c }}</a></li>
         {% endfor %}
         </ul>
+        {% endif %}
+        {% if data %}
+        {% for key, value in data %}
+            {% if key != "@context" and key != "id" %}
+                <p>{{ key }}</p>
+                <ul>
+                {% if value is iterable %}
+                    {% if value.id is defined %}
+                        <li><a href="{{ value.id }}">{{ value.id }}</a></li>
+                    {% elseif value.value is defined %}
+                        <li>{{ value.value }}</li>
+                    {% else %}
+                        {% for v in value %}
+                            {% if v.id is defined %}
+                                <li><a href="{{ v.id }}">{{ v.id }}</a></li>
+                            {% elseif v.value is defined %}
+                                <li>{{ v.value }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% endif %}
+                </ul>
+            {% endif %}
+        {% endfor %}
         {% endif %}
     </main>
     <footer> </footer>

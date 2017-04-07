@@ -56,7 +56,7 @@ class BasicContainer extends Resource
                 $graph->addResource($subject, $predicate, $filename);
             }
 
-            $accept = $request->headers->get('Accept');
+            $accept = $request->headers->get('accept');
             if ($this->responseType == "jsonld") {
                 $content = $graph->serialise($this->responseType, $this->getSerialisationOptions($accept));
             } elseif ($this->responseType == "html") {
