@@ -10,7 +10,7 @@ class BasicContainer extends Resource
 {
     public function __construct($path, $responseType, $responseMimeType)
     {
-        $this->path = $path;
+        parent::__construct($path);
         if ($responseType === null || $responseMimeType === null) {
             $this->responseType = "turtle";
             $this->responseMimeType = "text/turtle";

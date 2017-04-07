@@ -10,7 +10,7 @@ class RDFSource extends Resource
 {
     public function __construct($path, $responseType, $responseMimeType, $typeData)
     {
-        $this->path = $path;
+        parent::__construct($path);
         $this->typeData = $typeData;
         if ($responseType === null || $responseMimeType === null) {
             $this->responseType = "turtle";

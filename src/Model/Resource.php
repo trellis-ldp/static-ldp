@@ -12,6 +12,16 @@ abstract class Resource
     const DCTERMS_NS = "http://purl.org/dc/terms/";
 
     /**
+     * Create a LDP Resource
+     * @param $path
+     *    the file path to the resource
+     */
+    protected function __construct($path)
+    {
+        $this->path = $path;
+    }
+
+    /**
      * Get a representation of the given resource
      *
      * @param \Silex\Application $app
@@ -21,6 +31,32 @@ abstract class Resource
      * @return \Symfony\Component\HttpFoundation\Response
      */
     abstract public function get(Application $app, Request $request);
+
+    /**
+     * Compute the SHA1 checksum of a file
+     * @return string
+     *    The SHA1 checksum of the file
+     */
+    public function sha1()
+    {
+        if (is_file($this->path)) {
+            return sha1_file($this->path);
+        }
+        return null;
+    }
+
+    /**
+     * Compute the MD5 checksum of a file
+     * @return string
+     *    The MD5 checksum of the file
+     */
+    public function md5()
+    {
+        if (is_file($this->path)) {
+            return md5_file($this->path);
+        }
+        return null;
+    }
 
     /**
      * Map an expanded JSON-LD datastructure into a format

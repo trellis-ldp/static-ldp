@@ -10,7 +10,7 @@ class NonRDFSource extends Resource
 {
     public function __construct($path, $contentDisposition = true)
     {
-        $this->path = $path;
+        parent::__construct($path);
         $this->contentDisposition = $contentDisposition;
     }
 
