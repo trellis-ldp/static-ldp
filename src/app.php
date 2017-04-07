@@ -18,13 +18,14 @@ date_default_timezone_set('UTC');
 
 $app = new Application();
 
-$app['debug'] = false;
-$app['basePath'] = __DIR__;
+$app['configDir'] = __DIR__ .'/../config';
 $app->register(new ServiceControllerServiceProvider());
 $app->register(new ServiceProvider());
 $app->register(new TwigServiceProvider(), array(
   'twig.path' => __DIR__ . '/../templates',
 ));
+$app['debug'] = $app['config']['debug'];
+
 $app->mount("/", new ResourceController());
 
 $app->error(function (\Exception $e, Request $req, $code) {

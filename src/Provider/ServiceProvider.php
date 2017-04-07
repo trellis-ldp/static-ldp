@@ -4,12 +4,13 @@ namespace Trellis\StaticLdp\Provider;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Yaml\Yaml;
 use Trellis\StaticLdp\Controller\ResourceController;
+use Trellis\StaticLdp\TrellisConfiguration;
 
 class ServiceProvider implements ServiceProviderInterface
 {
-
     /**
      * {@inheritdoc}
      */
@@ -20,15 +21,11 @@ class ServiceProvider implements ServiceProviderInterface
             return new ResourceController($app);
         };
 
-        /**
-         * Ultra simplistic YAML settings loader.
-         */
         if (!isset($app['config'])) {
-            $app['config'] = function ($app) {
-                $configFile = $app['basePath'] . '/../config/settings.yml';
-                $settings = Yaml::parse(file_get_contents($configFile));
-                return $settings;
-            };
+            $processor = new Processor();
+            $confFile = $app['configDir'] . '/settings.yml';
+            $userConf = file_exists($confFile) ? [Yaml::parse(file_get_contents($confFile))] : [];
+            $app['config'] = $processor->processConfiguration(new TrellisConfiguration(), $userConf);
         }
     }
 }

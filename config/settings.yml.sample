@@ -1,7 +1,11 @@
-sourceDirectory: /usr/local/var/temp_files
+sourceDirectory: /mnt/data/ldp/
 template: default.twig
+defaultRdfFormat: turtle
 validRdfFormats:
   - { format: "turtle", mimeType: "text/turtle", extension : "ttl" }
   - { format: "jsonld", mimeType: "application/ld+json", extension: "jsonld" }
   - { format: "ntriples", mimeType: "application/n-triples", extension: "n3" }
-defaultRdfFormat: turtle
+prefixes:
+    dc: "http://purl.org/dc/terms/"
+    rdf: "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    rdfs: "http://www.w3.org/2000/01/rdf-schema#"
