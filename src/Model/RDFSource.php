@@ -48,7 +48,6 @@ class RDFSource extends Resource
                     ];
                     $content = $graph->serialise("jsonld", $options);
                     $template = $app['config']['template'];
-                    error_log($content);
                     $data = json_decode($content, true);
                     return $app['twig']->render($template, ["id" => $request->getURI(), "data" => $data]);
                     $res->setContent($content);
