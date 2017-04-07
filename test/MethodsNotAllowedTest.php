@@ -12,13 +12,13 @@ class MethodsNotAllowedTest extends StaticLdpTestBase
 {
 
     /**
-   * @var \Symfony\Component\BrowserKit\Client
-   */
+     * @var \Symfony\Component\BrowserKit\Client
+     */
     protected $client;
 
     /**
-   * {@inheritdoc}
-   */
+     * {@inheritdoc}
+     */
     public function setUp()
     {
         parent::setUp();
@@ -26,8 +26,8 @@ class MethodsNotAllowedTest extends StaticLdpTestBase
     }
 
     /**
-   * Test Post returns 405 with constrainedBy header
-   */
+     * Test Post returns 405 with constrainedBy header
+     */
     public function testPostMethod()
     {
         $crawler = $this->client->request('POST', "/");
@@ -47,8 +47,8 @@ class MethodsNotAllowedTest extends StaticLdpTestBase
     }
 
     /**
-   * Test Patch returns 405 with constrainedBy header
-   */
+     * Test Patch returns 405 with constrainedBy header
+     */
     public function testPatchMethod()
     {
         $crawler = $this->client->request('PATCH', "/");
@@ -68,8 +68,8 @@ class MethodsNotAllowedTest extends StaticLdpTestBase
     }
 
     /**
-   * Test Put returns 405 with constrainedBy header
-   */
+     * Test Put returns 405 with constrainedBy header
+     */
     public function testPutMethod()
     {
         $crawler = $this->client->request('PUT', "/");
