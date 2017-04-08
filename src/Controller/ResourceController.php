@@ -139,7 +139,7 @@ class ResourceController implements ControllerProviderInterface
                 if ($index !== false) {
                     return $item;
                 }
-                if (strpos($item, "text/html") >= 0) {
+                if (strpos($item, "text/html") !== false) {
                     return "text/html";
                 }
             }
