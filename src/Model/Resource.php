@@ -64,7 +64,7 @@ abstract class Resource
             foreach (explode(",", $wantDigestHeader) as $algorithm) {
                 $parts = explode(";", $algorithm);
                 $qVal = 1.0;
-                if (count($parts) > 1 && strpos($parts[1], "q=") == 0) {
+                if (count($parts) > 1 && strpos($parts[1], "q=") === 0) {
                     $qVal = floatval(trim(substr($parts[1], 2)));
                 }
                 $alg = strtolower(trim($parts[0]));
