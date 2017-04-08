@@ -32,6 +32,10 @@ class RDFSource extends Resource
         $res->setEtag($this->getEtag());
         if (!$res->isNotModified($request)) {
             if ($this->canStream()) {
+                $digest = $this->wantDigest($request->headers->get('want-digest'));
+                if ($digest) {
+                    $res->headers->set('Digest', $digest);
+                }
                 $filename = $this->path;
                 $stream = function () use ($filename) {
                     readfile($filename);

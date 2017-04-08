@@ -19,16 +19,20 @@ class NonRDFSource extends Resource
      */
     public function get(Application $app, Request $request)
     {
-        $filename = $this->path;
-        $stream = function () use ($filename) {
-            readfile($filename);
-        };
         $res = new Response();
         $res->headers->add($this->getHeaders());
         $res->setLastModified(\DateTime::createFromFormat('U', filemtime($this->path)));
         $res->setEtag($this->getEtag());
         if (!$res->isNotModified($request)) {
-            return $app->stream($stream, $expects202 ? 202 : 200, $res->headers->all());
+            $digest = $this->wantDigest($request->headers->get('want-digest'));
+            if ($digest) {
+                $res->headers->set('Digest', $digest);
+            }
+            $filename = $this->path;
+            $stream = function () use ($filename) {
+                readfile($filename);
+            };
+            return $app->stream($stream, 200, $res->headers->all());
         }
         return $res;
     }
