@@ -8,19 +8,22 @@ use Symfony\Component\HttpFoundation\Response;
 
 class NonRDFSource extends Resource
 {
-    public function __construct($path, $formats, $contentDisposition = true)
+    public function __construct($path, $formats)
     {
         parent::__construct($path, $formats);
-        $this->contentDisposition = $contentDisposition;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function respond(Application $app, Request $request)
+    public function respond(Application $app, Request $request, $options = array())
     {
+        $contentDisposition = true;
+        if (array_key_exists("contentDisposition", $options)) {
+            $contentDisposition = $options['contentDisposition'];
+        }
         $res = new Response();
-        $res->headers->add($this->getHeaders());
+        $res->headers->add($this->getHeaders($contentDisposition));
         $res->setLastModified(\DateTime::createFromFormat('U', filemtime($this->path)));
         $res->setEtag($this->getEtag());
         if (!$res->isNotModified($request)) {
@@ -44,7 +47,7 @@ class NonRDFSource extends Resource
         return $res;
     }
 
-    private function getHeaders()
+    private function getHeaders($contentDisposition)
     {
         $headers = [
             "Content-Type" => mime_content_type($this->path),
@@ -52,7 +55,7 @@ class NonRDFSource extends Resource
                        "<".self::LDP_NS."NonRDFSource>; rel=\"type\""],
             "Content-Length" => filesize($this->path),
         ];
-        if ($this->contentDisposition) {
+        if ($contentDisposition) {
             $filename = basename($this->path);
             $headers['Content-Disposition'] = "attachment; filename=\"{$filename}\"";
         }
