@@ -31,6 +31,17 @@ class RDFSource extends Resource
         $res->setLastModified(\DateTime::createFromFormat('U', filemtime($this->path)));
         $res->setEtag($this->getEtag());
         if (!$res->isNotModified($request)) {
+            $extParts = explode(".", $this->path);
+            if (count($extParts) > 1) {
+                $ext = array_pop($extParts);
+                $described = implode(".", $extParts);
+                if (file_exists(implode(".", $extParts))) {
+                    $uri = $request->getUri();
+                    $link = "<" . substr($uri, 0, strlen($uri) - strlen($ext) - 1) . ">; rel=\"describes\"";
+                    $res->headers->set("Link", $link, false);
+                }
+            }
+
             if ($this->canStream()) {
                 $digest = $this->wantDigest($request->headers->get('want-digest'));
                 if ($digest) {

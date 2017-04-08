@@ -70,7 +70,7 @@ class ResourceController implements ControllerProviderInterface
                 // It is a RDF file
                 $resource = new RDFSource($requestedPath, $responseFormat, $responseMimeType, $formats);
             } else {
-                $resource = new NonRDFSource($requestedPath);
+                $resource = new NonRDFSource($requestedPath, $formats);
             }
         } else {
             $resource = new BasicContainer($requestedPath, $responseFormat, $responseMimeType);

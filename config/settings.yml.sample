@@ -4,7 +4,7 @@ defaultRdfFormat: turtle
 validRdfFormats:
   - { format: "turtle", mimeType: "text/turtle", extension : "ttl" }
   - { format: "jsonld", mimeType: "application/ld+json", extension: "jsonld" }
-  - { format: "ntriples", mimeType: "application/n-triples", extension: "n3" }
+  - { format: "ntriples", mimeType: "application/n-triples", extension: "nt" }
 prefixes:
     dc: "http://purl.org/dc/terms/"
     rdf: "http://www.w3.org/1999/02/22-rdf-syntax-ns#"

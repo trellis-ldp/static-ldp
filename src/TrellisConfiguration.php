@@ -46,7 +46,7 @@ class TrellisConfiguration implements ConfigurationInterface
                     ], [
                         "format" => "ntriples",
                         "mimeType" => "application/n-triples",
-                        "extension" => "n3"
+                        "extension" => "nt"
                     ]])
                 ->end()
                 ->arrayNode('prefixes')

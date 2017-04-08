@@ -8,10 +8,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class NonRDFSource extends Resource
 {
-    public function __construct($path, $contentDisposition = true)
+    public function __construct($path, $typeData, $contentDisposition = true)
     {
         parent::__construct($path);
         $this->contentDisposition = $contentDisposition;
+        $this->typeData = $typeData;
     }
 
     /**
@@ -27,6 +28,13 @@ class NonRDFSource extends Resource
             $digest = $this->wantDigest($request->headers->get('want-digest'));
             if ($digest) {
                 $res->headers->set('Digest', $digest);
+            }
+            foreach ($this->typeData as $type) {
+                $description = $this->path . "." . $type['extension'];
+                if (file_exists($description)) {
+                    $link = "<" . $request->getUri().".".$type['extension'].">; rel=\"describedby\"";
+                    $res->headers->set("Link", $link, false);
+                }
             }
             $filename = $this->path;
             $stream = function () use ($filename) {
