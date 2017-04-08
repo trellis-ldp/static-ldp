@@ -8,11 +8,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class BasicContainer extends Resource
 {
-    public function __construct($path, $formats)
-    {
-        parent::__construct($path, $formats);
-    }
-
     /**
      * {@inheritdoc}
      */

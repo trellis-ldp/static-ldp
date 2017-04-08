@@ -18,7 +18,7 @@ abstract class Resource
      * @param $formats array
      *    the supported RDF formats
      */
-    protected function __construct($path, $formats)
+    public function __construct($path, $formats)
     {
         $this->path = $path;
         $this->formats = $formats;
