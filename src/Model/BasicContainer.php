@@ -23,7 +23,7 @@ class BasicContainer extends Resource
     /**
      * {@inheritdoc}
      */
-    public function get(Application $app, Request $request)
+    public function respond(Application $app, Request $request)
     {
         $modifiedTime = \DateTime::createFromFormat('U', filemtime($this->path));
         $headers = [

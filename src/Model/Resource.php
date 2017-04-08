@@ -30,7 +30,7 @@ abstract class Resource
      *   The incoming request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    abstract public function get(Application $app, Request $request);
+    abstract public function respond(Application $app, Request $request);
 
     /**
      * Compute the SHA1 checksum of a file

@@ -18,7 +18,7 @@ class NonRDFSource extends Resource
     /**
      * {@inheritdoc}
      */
-    public function get(Application $app, Request $request)
+    public function respond(Application $app, Request $request)
     {
         $res = new Response();
         $res->headers->add($this->getHeaders());

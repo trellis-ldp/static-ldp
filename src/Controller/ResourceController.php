@@ -75,7 +75,7 @@ class ResourceController implements ControllerProviderInterface
         } else {
             $resource = new BasicContainer($requestedPath, $responseFormat, $responseMimeType);
         }
-        return $resource->get($app, $request);
+        return $resource->respond($app, $request);
     }
 
     /**
