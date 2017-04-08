@@ -8,11 +8,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class NonRDFSource extends Resource
 {
-    public function __construct($path, $typeData, $contentDisposition = true)
+    public function __construct($path, $formats, $contentDisposition = true)
     {
-        parent::__construct($path);
+        parent::__construct($path, $formats);
         $this->contentDisposition = $contentDisposition;
-        $this->typeData = $typeData;
     }
 
     /**
@@ -29,7 +28,7 @@ class NonRDFSource extends Resource
             if ($digest) {
                 $res->headers->set('Digest', $digest);
             }
-            foreach ($this->typeData as $type) {
+            foreach ($this->formats as $type) {
                 $description = $this->path . "." . $type['extension'];
                 if (file_exists($description)) {
                     $link = "<" . $request->getUri().".".$type['extension'].">; rel=\"describedby\"";

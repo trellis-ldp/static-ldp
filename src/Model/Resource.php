@@ -15,10 +15,13 @@ abstract class Resource
      * Create a LDP Resource
      * @param $path
      *    the file path to the resource
+     * @param $formats array
+     *    the supported RDF formats
      */
-    protected function __construct($path)
+    protected function __construct($path, $formats)
     {
         $this->path = $path;
+        $this->formats = $formats;
     }
 
     /**
@@ -153,5 +156,59 @@ abstract class Resource
         }
         return $data;
 
+    }
+
+    /**
+     * Find the valid RDF format
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *   The current request.
+     *
+     * @return string
+     *   EasyRdf "format" or null if not supported.
+     */
+    protected function getResponseFormat(Request $request)
+    {
+        if ($request->headers->has('accept')) {
+            $accept = $request->getAcceptableContentTypes();
+            foreach ($accept as $item) {
+                $index = array_search($item, array_column($this->formats, 'mimeType'));
+                if ($index !== false) {
+                    return $this->formats[$index]['format'];
+                }
+                if (strpos($item, "text/html") !== false) {
+                    return "html";
+                }
+            }
+        }
+        return "turtle";
+    }
+
+    /**
+     * Find the mimeType for the request
+     *
+     * @param array $validRdfFormats
+     *   Supported formats from the config.
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *   The current request.
+     *
+     * @return string
+     *   MimeType or null if not defined.
+     */
+    protected function getResponseMimeType(Request $request)
+    {
+        if ($request->headers->has('accept')) {
+            $accept = $request->getAcceptableContentTypes();
+            foreach ($accept as $item) {
+                $index = array_search($item, array_column($this->formats, 'mimeType'));
+                if ($index !== false) {
+                    return $item;
+                }
+                if (strpos($item, "text/html") !== false) {
+                    return "text/html";
+                }
+            }
+        }
+        return "text/turtle";
     }
 }

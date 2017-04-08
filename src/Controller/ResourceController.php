@@ -2,9 +2,10 @@
 
 namespace Trellis\StaticLdp\Controller;
 
-use Trellis\StaticLdp\Model\RDFSource;
-use Trellis\StaticLdp\Model\NonRDFSource;
 use Trellis\StaticLdp\Model\BasicContainer;
+use Trellis\StaticLdp\Model\NonRDFSource;
+use Trellis\StaticLdp\Model\RDFSource;
+use Trellis\StaticLdp\Model\ResourceFactory;
 use Silex\Api\ControllerProviderInterface;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,23 +59,11 @@ class ResourceController implements ControllerProviderInterface
             return new Response("Not Found", 404);
         }
 
-        $responseFormat = $this->getResponseFormat($app['config']['validRdfFormats'], $request);
-        $responseMimeType = $this->getResponseMimeType($app['config']['validRdfFormats'], $request);
+        //$responseFormat = $this->getResponseFormat($app['config']['validRdfFormats'], $request);
+        //$responseMimeType = $this->getResponseMimeType($app['config']['validRdfFormats'], $request);
+        $formats = $app['config']['validRdfFormats'];
 
-        $resource = null;
-        if (is_file($requestedPath)) {
-            $filenameChunks = explode('.', $requestedPath);
-            $extension = array_pop($filenameChunks);
-            $formats = $app['config']['validRdfFormats'];
-            if (array_search($extension, array_column($formats, 'extension')) !== false) {
-                // It is a RDF file
-                $resource = new RDFSource($requestedPath, $responseFormat, $responseMimeType, $formats);
-            } else {
-                $resource = new NonRDFSource($requestedPath, $formats);
-            }
-        } else {
-            $resource = new BasicContainer($requestedPath, $responseFormat, $responseMimeType);
-        }
+        $resource = ResourceFactory::create($requestedPath, $formats);
         return $resource->respond($app, $request);
     }
 
@@ -89,61 +78,5 @@ class ResourceController implements ControllerProviderInterface
             "Allow" => "OPTIONS, GET, HEAD",
         ];
         return new Response('', 200, $headers);
-    }
-
-    /**
-     * Find the valid RDF format
-     *
-     * @param array $validRdfFormats
-     *   Supported formats from the config.
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *   The current request.
-     *
-     * @return string
-     *   EasyRdf "format" or null if not supported.
-     */
-    private function getResponseFormat(array $validRdfFormats, Request $request)
-    {
-        if ($request->headers->has('accept')) {
-            $accept = $request->getAcceptableContentTypes();
-            foreach ($accept as $item) {
-                $index = array_search($item, array_column($validRdfFormats, 'mimeType'));
-                if ($index !== false) {
-                    return $validRdfFormats[$index]['format'];
-                }
-                if (strpos($item, "text/html") >= 0) {
-                    return "html";
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Find the mimeType for the request
-     *
-     * @param array $validRdfFormats
-     *   Supported formats from the config.
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *   The current request.
-     *
-     * @return string
-     *   MimeType or null if not defined.
-     */
-    private function getResponseMimeType(array $validRdfFormats, Request $request)
-    {
-        if ($request->headers->has('accept')) {
-            $accept = $request->getAcceptableContentTypes();
-            foreach ($accept as $item) {
-                $index = array_search($item, array_column($validRdfFormats, 'mimeType'));
-                if ($index !== false) {
-                    return $item;
-                }
-                if (strpos($item, "text/html") !== false) {
-                    return "text/html";
-                }
-            }
-        }
-        return null;
     }
 }

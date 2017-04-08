@@ -8,16 +8,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class BasicContainer extends Resource
 {
-    public function __construct($path, $responseType, $responseMimeType)
+    public function __construct($path, $formats)
     {
-        parent::__construct($path);
-        if ($responseType === null || $responseMimeType === null) {
-            $this->responseType = "turtle";
-            $this->responseMimeType = "text/turtle";
-        } else {
-            $this->responseType = $responseType;
-            $this->responseMimeType = $responseMimeType;
-        }
+        parent::__construct($path, $formats);
     }
 
     /**
@@ -25,9 +18,12 @@ class BasicContainer extends Resource
      */
     public function respond(Application $app, Request $request)
     {
+        $responseMimeType = $this->getResponseMimeType($request);
+        $responseFormat = $this->getResponseFormat($request);
+
         $modifiedTime = \DateTime::createFromFormat('U', filemtime($this->path));
         $headers = [
-            "Content-Type" => $this->responseMimeType,
+            "Content-Type" => $responseMimeType,
             "Link" => ["<".self::LDP_NS."Resource>; rel=\"type\"",
                        "<".self::LDP_NS."BasicContainer>; rel=\"type\""],
             "Vary" => "Accept"
@@ -36,7 +32,7 @@ class BasicContainer extends Resource
         $res = new Response();
         $res->headers->add($headers);
         $res->setLastModified($modifiedTime);
-        $res->setEtag($this->getEtag());
+        $res->setEtag($this->getEtag($responseFormat));
 
         if (!$res->isNotModified($request)) {
             $subject = $request->getUri();
@@ -60,9 +56,9 @@ class BasicContainer extends Resource
             }
 
             $accept = $request->headers->get('accept');
-            if ($this->responseType == "jsonld") {
-                $content = $graph->serialise($this->responseType, $this->getSerialisationOptions($accept));
-            } elseif ($this->responseType == "html") {
+            if ($responseFormat == "jsonld") {
+                $content = $graph->serialise($responseFormat, $this->getSerialisationOptions($accept));
+            } elseif ($responseFormat == "html") {
                 $options = [
                     "compact" => true,
                     "context" => (object) [
@@ -84,7 +80,7 @@ class BasicContainer extends Resource
                 $template = $app['config']['template'];
                 return $app['twig']->render($template, ["id" => $subject, "dataset" => $dataset]);
             } else {
-                $content = $graph->serialise($this->responseType);
+                $content = $graph->serialise($responseFormat);
             }
 
             $res->setContent($content);
@@ -93,10 +89,10 @@ class BasicContainer extends Resource
         return $res;
     }
 
-    private function getEtag()
+    private function getEtag($responseFormat)
     {
         $mtime = filemtime($this->path);
-        return sha1($mtime . $this->path . $this->responseType);
+        return sha1($mtime . $this->path . $responseFormat);
     }
 
     private function useCompactJsonLd($accept)
