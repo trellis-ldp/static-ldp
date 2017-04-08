@@ -59,34 +59,6 @@ abstract class Resource
     }
 
     /**
-     * Verify Expect header
-     * @return boolean
-     *    True if the expectation succeeds, false otherwise
-     */
-    public function verifyDigest($expect)
-    {
-        // 202-digest; md5=abcdef0987654321==
-        $parts = explode(";", $expect, 2);
-        if (strtolower($parts[0]) == "202-digest") {
-            if (count($parts) == 2) {
-                $expectation = explode("=", trim($parts[1]), 2);
-                if (count($expectation) == 2) {
-                    $algorithm = trim(strtolower($expectation[0]));
-                    $digest = trim(strtolower($expectation[1]));
-                    switch($algorithm) {
-                        case "md5":
-                            return $this->md5() == $digest;
-                        case "sha1":
-                            return $this->sha1() == $digest;
-                    }
-                }
-            }
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * Map an expanded JSON-LD datastructure into a format
      * suitable for the HTML templating system
      *

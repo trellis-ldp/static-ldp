@@ -28,16 +28,7 @@ class NonRDFSource extends Resource
         $res->setLastModified(\DateTime::createFromFormat('U', filemtime($this->path)));
         $res->setEtag($this->getEtag());
         if (!$res->isNotModified($request)) {
-            // Apache httpd doesn't support the Expect header
-            // for anything that isn't 100-continue.
-            $expect = $request->headers->get('x-expect');
-            $expects202 = strpos($expect, "202-digest") === 0;
-            if (!$this->verifyDigest($expect)) {
-                $res->setStatusCode(417);
-                $res->setContent("Entity digest failed");
-            } else {
-                return $app->stream($stream, $expects202 ? 202 : 200, $res->headers->all());
-            }
+            return $app->stream($stream, $expects202 ? 202 : 200, $res->headers->all());
         }
         return $res;
     }
