@@ -1,24 +1,12 @@
-<http://data.nobelprize.org/resource/laureate/914>
-a       <http://data.nobelprize.org/terms/Laureate> , <http://xmlns.com/foaf/0.1/Person> ;
-<http://www.w3.org/2000/01/rdf-schema#label>
-"Malala Yousafzai" ;
-<http://data.nobelprize.org/terms/laureateAward>
-<http://data.nobelprize.org/resource/laureateaward/974> ;
-<http://data.nobelprize.org/terms/nobelPrize>
-<http://data.nobelprize.org/resource/nobelprize/Peace/2014> ;
-<http://dbpedia.org/ontology/birthPlace>
-<http://data.nobelprize.org/resource/country/Pakistan> , <http://data.nobelprize.org/resource/city/Mingora> ;
-<http://dbpedia.org/property/dateOfBirth>
-"1997-07-12"^^<http://www.w3.org/2001/XMLSchema#date> ;
-<http://www.w3.org/2002/07/owl#sameAs>
-<http://viaf.org/viaf/305307972> , <http://dbpedia.org/resource/Malala_Yousafzai> ;
-<http://xmlns.com/foaf/0.1/birthday>
-"1997-07-12"^^<http://www.w3.org/2001/XMLSchema#date> ;
-<http://xmlns.com/foaf/0.1/familyName>
-"Yousafzai" ;
-<http://xmlns.com/foaf/0.1/gender>
-"female" ;
-<http://xmlns.com/foaf/0.1/givenName>
-"Malala" ;
-<http://xmlns.com/foaf/0.1/name>
-"Malala Yousafzai" .
+<http://data.nobelprize.org/resource/laureate/914> a <http://data.nobelprize.org/terms/Laureate> , <http://xmlns.com/foaf/0.1/Person> ;
+<http://www.w3.org/2000/01/rdf-schema#label> "Malala Yousafzai" ;
+<http://data.nobelprize.org/terms/laureateAward> <http://data.nobelprize.org/resource/laureateaward/974> ;
+<http://data.nobelprize.org/terms/nobelPrize> <http://data.nobelprize.org/resource/nobelprize/Peace/2014> ;
+<http://dbpedia.org/ontology/birthPlace> <http://data.nobelprize.org/resource/country/Pakistan> , <http://data.nobelprize.org/resource/city/Mingora> ;
+<http://dbpedia.org/property/dateOfBirth> "1997-07-12"^^<http://www.w3.org/2001/XMLSchema#date> ;
+<http://www.w3.org/2002/07/owl#sameAs> <http://viaf.org/viaf/305307972> , <http://dbpedia.org/resource/Malala_Yousafzai> ;
+<http://xmlns.com/foaf/0.1/birthday> "1997-07-12"^^<http://www.w3.org/2001/XMLSchema#date> ;
+<http://xmlns.com/foaf/0.1/familyName> "Yousafzai" ;
+<http://xmlns.com/foaf/0.1/gender> "female" ;
+<http://xmlns.com/foaf/0.1/givenName> "Malala" ;
+<http://xmlns.com/foaf/0.1/name> "Malala Yousafzai" .
