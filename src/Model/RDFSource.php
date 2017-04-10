@@ -19,7 +19,7 @@ class RDFSource extends Resource
         $res = new Response();
         $res->headers->add($this->getHeaders($responseMimeType));
         $res->setLastModified(\DateTime::createFromFormat('U', filemtime($this->path)));
-        $res->setEtag($this->getEtag($responseFormat));
+        $res->setEtag($this->getEtag($responseFormat, $request->headers->get('range')));
         if (!$res->isNotModified($request)) {
             $extParts = explode(".", $this->path);
             if (count($extParts) > 1) {
@@ -58,11 +58,12 @@ class RDFSource extends Resource
         return $res;
     }
 
-    private function getEtag($responseFormat)
+    private function getEtag($responseFormat, $range)
     {
         $mtime = filemtime($this->path);
         $size = filesize($this->path);
-        return sha1($mtime . $size . $responseFormat);
+        $byteRange = $range ? $range : "";
+        return sha1($mtime . $size . $responseFormat . $range);
     }
 
     private function canStream($responseFormat)

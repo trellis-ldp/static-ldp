@@ -27,7 +27,7 @@ class BasicContainer extends Resource
         $res = new Response();
         $res->headers->add($headers);
         $res->setLastModified($modifiedTime);
-        $res->setEtag($this->getEtag($responseFormat));
+        $res->setEtag($this->getEtag($responseFormat, $request->headers->get('range')));
 
         if (!$res->isNotModified($request)) {
             $subject = $request->getUri();
@@ -84,10 +84,11 @@ class BasicContainer extends Resource
         return $res;
     }
 
-    private function getEtag($responseFormat)
+    private function getEtag($responseFormat, $range)
     {
         $mtime = filemtime($this->path);
-        return sha1($mtime . $this->path . $responseFormat);
+        $byteRange = $range ? $range : "";
+        return sha1($mtime . $this->path . $responseFormat . $byteRange);
     }
 
     private function useCompactJsonLd($accept)
