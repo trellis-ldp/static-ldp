@@ -32,7 +32,7 @@ class RDFSource extends Resource
                 }
             }
 
-            if ($this->canStream()) {
+            if ($this->canStream($responseFormat)) {
                 $digest = $this->wantDigest($request->headers->get('want-digest'));
                 if ($digest) {
                     $res->headers->set('Digest', $digest);
