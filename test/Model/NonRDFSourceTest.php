@@ -5,7 +5,7 @@ namespace Trellis\StaticLdp\Model;
 use Trellis\StaticLdp\StaticLdpTestBase;
 
 /**
- * Unit Test of methods not allowed response.
+ * Unit Test of NonRDFSource class.
  *
  * @coversDefaultClass \Trellis\StaticLdp\Model\NonRDFSource
  * @group unittest
