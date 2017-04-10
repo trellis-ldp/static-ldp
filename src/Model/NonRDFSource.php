@@ -11,7 +11,7 @@ class NonRDFSource extends Resource
     /**
      * {@inheritdoc}
      */
-    public function respond(Application $app, Request $request, $options = array())
+    public function respond(Application $app, Request $request, array $options = array())
     {
         $contentDisposition = true;
         if (array_key_exists("contentDisposition", $options)) {

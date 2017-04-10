@@ -11,7 +11,7 @@ class RDFSource extends Resource
     /**
      * {@inheritdoc}
      */
-    public function respond(Application $app, Request $request)
+    public function respond(Application $app, Request $request, array $options = array())
     {
         $responseMimeType = $this->getResponseMimeType($request);
         $responseFormat = $this->getResponseFormat($request);

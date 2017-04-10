@@ -31,9 +31,11 @@ abstract class Resource
      *   The Silex application.
      * @param \Symfony\Component\HttpFoundation\Request $request
      *   The incoming request
+     * @param array $options
+     *   Optional parameters
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    abstract public function respond(Application $app, Request $request);
+    abstract public function respond(Application $app, Request $request, array $options);
 
     /**
      * Compute the SHA1 checksum of a file
