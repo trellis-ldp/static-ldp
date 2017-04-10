@@ -32,22 +32,41 @@ class RDFSourceTest extends StaticLdpTestBase
      */
     public function testGetRDFSource()
     {
-        $expected_charset = "text/turtle; charset=UTF-8";
-        $expected_links = [
+         $expected_links = [
             "<" . Resource::LDP_NS . "Resource>; rel=\"type\"",
             "<" . Resource::LDP_NS . "RDFSource>; rel=\"type\""
         ];
-        $crawler = $this->client->request('GET', "/nobel_914.ttl", [], [], ["HTTP_ACCEPT" => "text/turtle"]);
+        $expected_vary = "Accept";
+        $request_mime = "text/turtle";
+
+        $this->client->request('GET', "/nobel_914.ttl", [], [], ['HTTP_ACCEPT' => $request_mime]);
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode(), "GET should be allowed.");
         $response = $this->client->getResponse();
-
-        $this->assertEquals($response->getStatusCode(), 200);
-
-        $this->assertTrue($response->headers->has("Content-Type"), "Missing Content-Type header");
-        $this->assertEquals($expected_charset, $response->headers->get('Content-Type'), "Content-Type incorrect");
+        $charset = $response->getCharset();
+        $expected_mime = "{$request_mime}; charset={$charset}";
 
         $this->assertTrue($response->headers->has('Link'), "Missing Link header");
         $this->assertEquals($expected_links, $response->headers->get("Link", null, false), "Link headers incorrect.");
 
+        $this->assertTrue($response->headers->has('Vary'), "Missing Vary header");
+        $this->assertEquals($expected_vary, $response->headers->get('Vary'), "Vary headers incorrect.");
+
+        $this->assertTrue($response->headers->has("Content-Type"), "Missing Content-Type header");
+        $this->assertEquals($expected_mime, $response->headers->get('Content-Type'), "Content-Type header incorrect");
+
         $this->assertTrue($response->headers->has("etag"), "Missing Etag header.");
+        $etag = $response->headers->get('etag');
+
+        $this->client->request('GET', "/nobel_914.ttl", [], [], ['HTTP_ACCEPT' => $expected_mime]);
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode(), "GET should be allowed a second time.");
+        $this->assertTrue($this->client->getResponse()->headers->has("etag"), "Missing Etag header.");
+        $this->assertEquals($etag, $this->client->getResponse()->headers->get('etag'), "Etags don't match.");
+
+        $headers = [
+            'HTTP_ACCEPT' => $expected_mime,
+            'HTTP_IF_NONE_MATCH' => "{$etag}"
+        ];
+        $this->client->request('GET', "/nobel_914.ttl", [], [], $headers);
+        $this->assertEquals(304, $this->client->getResponse()->getStatusCode(), "Conditional GET should return a 304");
     }
 }
