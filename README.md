@@ -12,21 +12,21 @@ A simple way to expose static assets as a read-only <a href="https://www.w3.org/
 * The <a href="http://php.net/manual/en/book.mbstring.php">mbstring</a> extension
 * The <a href="http://php.net/manual/en/book.pcre.php">pcre</a> extension
 
-## Basics
-
-By installing `static-ldp` and configuring the `sourceDirectory` to point
-to the location of your static resources, you have a simple, read-only linked data server.
-
 ## Installation
 
 To install `static-ldp`, follow these steps:
 
-1. run `composer create-project trellis-ldp/static-ldp`.
+1. run `composer create-project trellis-ldp/static-ldp`
 2. create a `./static-ldp/config/settings.yml` file like this:
 
 ```
 sourceDirectory: /path/to/data/directory
 ```
+
+## Basics
+
+By installing `static-ldp` and configuring the `sourceDirectory` to point
+to the location of your static resources, you have a simple, read-only linked data server.
 
 ## LDP Resources
 
