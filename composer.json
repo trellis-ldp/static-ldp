@@ -1,5 +1,12 @@
 {
+    "name": "trellis-ldp/static-ldp",
+    "type": "project",
+    "description": "LDP Server for static assets",
+    "keywords": ["ldp"],
+    "homepage": "https://github.com/trellis-ldp/static-ldp",
+    "license": "Apache2",
     "require": {
+        "php": ">=5.6.0",
         "silex/silex": "^2.0",
         "symfony/config": "^3.2",
         "symfony/yaml": "^3.0",
