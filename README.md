@@ -1,6 +1,6 @@
 # static-ldp
 
-A simple way to expose static assets as a read-only LDP server.
+A simple way to expose static assets as a read-only <a href="https://www.w3.org/TR/ldp/">LDP</a> server.
 
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%205.6-8892BF.svg?style=flat-square)](https://php.net/)
 [![Build Status](https://travis-ci.org/trellis-ldp/static-ldp.svg?branch=master)](https://travis-ci.org/trellis-ldp/static-ldp)
