@@ -17,6 +17,17 @@ A simple way to expose static assets as a read-only <a href="https://www.w3.org/
 By installing `static-ldp` and configuring the `sourceDirectory` to point
 to the location of your static resources, you have a simple, read-only linked data server.
 
+## Installation
+
+To install `static-ldp`, follow these steps:
+
+1. run `composer create-project trellis-ldp/static-ldp`.
+2. create a `./static-ldp/config/settings.yml` file like this:
+
+```
+sourceDirectory: /path/to/data/directory
+```
+
 ## LDP Resources
 
 Individual files are served as `ldp:NonRDFSource` resources,
@@ -43,15 +54,6 @@ headers will be ignored when a content range is requested.
 Only `md5` and `sha1` algorithms are supported; other algorithms will be ignored. It should be noted that, for large
 files, `Want-Digest` requests may perform considerably slower, as the digest will need to be computed before a
 response is sent.
-
-## Installation
-
-To install `static-ldp`, follow these steps:
-
-1. run `composer create-project trellis-ldp/static-ldp`.
-2. create a `./static-ldp/config/settings.yml` file like this:
-
-    sourceDirectory: /path/to/data/directory
 
 ## Configuration
 
