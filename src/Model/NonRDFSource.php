@@ -6,6 +6,9 @@ use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * A class representing an LDP NonRDFSource
+ */
 class NonRDFSource extends Resource
 {
     /**
@@ -18,13 +21,19 @@ class NonRDFSource extends Resource
             $contentDisposition = $options['contentDisposition'];
         }
         $res = new Response();
+        $res->setPublic();
         $res->headers->add($this->getHeaders($contentDisposition));
         $res->setLastModified(\DateTime::createFromFormat('U', filemtime($this->path)));
         $res->setEtag($this->getEtag($request->headers->get('range')));
         if (!$res->isNotModified($request)) {
-            $digest = $this->wantDigest($request->headers->get('want-digest'));
-            if ($digest) {
-                $res->headers->set('Digest', $digest);
+            $algorithm = $this->getDigestAlgorithm($request->headers->get('want-digest'));
+            switch ($algorithm) {
+                case "md5":
+                    $res->headers->set('Digest', "md5=" . $this->md5());
+                    break;
+                case "sha1":
+                    $res->headers->set('Digest', "sha1=" . $this->sha1());
+                    break;
             }
             foreach ($this->formats as $type) {
                 $description = $this->path . "." . $type['extension'];

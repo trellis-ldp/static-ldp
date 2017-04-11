@@ -13,15 +13,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ResourceController implements ControllerProviderInterface
 {
-    const LDP_NS = "http://www.w3.org/ns/ldp#";
-    const RDF_NS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
-    const DCTERMS_NS = "http://purl.org/dc/terms/";
-
-    // Its a class, no need to pass all via arguments around.
-    private $modifiedTime = null;
-    private $contentLength = 0;
-    private $eTag = null;
-
     /**
      * {@inheritdoc}
      */
@@ -59,12 +50,13 @@ class ResourceController implements ControllerProviderInterface
             return new Response("Not Found", 404);
         }
 
-        //$responseFormat = $this->getResponseFormat($app['config']['validRdfFormats'], $request);
-        //$responseMimeType = $this->getResponseMimeType($app['config']['validRdfFormats'], $request);
         $formats = $app['config']['validRdfFormats'];
+        $options = [
+            "contentDisposition" => $app['config']['contentDisposition']
+        ];
 
         $resource = ResourceFactory::create($requestedPath, $formats);
-        return $resource->respond($app, $request);
+        return $resource->respond($app, $request, $options);
     }
 
     /**

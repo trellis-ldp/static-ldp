@@ -5,6 +5,9 @@ namespace Trellis\StaticLdp\Model;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * A class representing an LDP Resource
+ */
 abstract class Resource
 {
     const LDP_NS = "http://www.w3.org/ns/ldp#";
@@ -42,45 +45,12 @@ abstract class Resource
      * @return string
      *    The SHA1 checksum of the file
      */
-    public function sha1()
+    public function sha1($content = null)
     {
-        if (is_file($this->path)) {
+        if ($content !== null) {
+            return sha1($content);
+        } elseif (is_file($this->path)) {
             return sha1_file($this->path);
-        }
-        return null;
-    }
-
-    /**
-     * Apply a want-digest header, if applicable
-     *
-     * @param $wantDigestHeader
-     *      The Want-Digest header
-     * @return string
-     *      The instance digest, if relevant
-     */
-    protected function wantDigest($wantDigestHeader)
-    {
-        if ($wantDigestHeader) {
-            $maxQVal = 0.0;
-            $bestAlgorithm = null;
-            foreach (explode(",", $wantDigestHeader) as $algorithm) {
-                $parts = explode(";", $algorithm);
-                $qVal = 1.0;
-                if (count($parts) > 1 && strpos($parts[1], "q=") === 0) {
-                    $qVal = floatval(trim(substr($parts[1], 2)));
-                }
-                $alg = strtolower(trim($parts[0]));
-                if ($qVal > $maxQVal && in_array($alg, ["md5", "sha1"])) {
-                    $bestAlgorithm = $alg;
-                    $maxQVal = $qVal;
-                }
-            }
-            switch($bestAlgorithm) {
-                case "md5":
-                    return "md5=" . $this->md5();
-                case "sha1":
-                    return "sha1=" . $this->sha1();
-            }
         }
         return null;
     }
@@ -90,12 +60,44 @@ abstract class Resource
      * @return string
      *    The MD5 checksum of the file
      */
-    public function md5()
+    public function md5($content = null)
     {
-        if (is_file($this->path)) {
+        if ($content !== null) {
+            return md5($content);
+        } elseif (is_file($this->path)) {
             return md5_file($this->path);
         }
         return null;
+    }
+
+    /**
+     * Given a want-digest header, return the applicable algorithm
+     *
+     * @param $wantDigestHeader
+     *      The Want-Digest header
+     * @return string
+     *      The algorithm name, if any
+     */
+    protected function getDigestAlgorithm($wantDigestHeader)
+    {
+        $validAlgorithms = ["md5", "sha1"];
+        $bestAlgorithm = null;
+        if ($wantDigestHeader) {
+            $maxQVal = 0.0;
+            foreach (explode(",", $wantDigestHeader) as $algorithm) {
+                $parts = explode(";", $algorithm);
+                $qVal = 1.0;
+                if (count($parts) > 1 && strpos($parts[1], "q=") === 0) {
+                    $qVal = floatval(trim(substr($parts[1], 2)));
+                }
+                $alg = strtolower(trim($parts[0]));
+                if ($qVal > $maxQVal && in_array($alg, $validAlgorithms)) {
+                    $bestAlgorithm = $alg;
+                    $maxQVal = $qVal;
+                }
+            }
+        }
+        return $bestAlgorithm;
     }
 
     /**

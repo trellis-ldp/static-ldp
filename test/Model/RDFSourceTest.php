@@ -42,6 +42,7 @@ class RDFSourceTest extends StaticLdpTestBase
         $this->client->request('GET', "/nobel_914.ttl", [], [], ['HTTP_ACCEPT' => $request_mime]);
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode(), "GET should be allowed.");
         $response = $this->client->getResponse();
+        $response->sendContent();
         $charset = $response->getCharset();
         $expected_mime = "{$request_mime}; charset={$charset}";
 

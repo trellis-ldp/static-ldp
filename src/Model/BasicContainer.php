@@ -6,6 +6,9 @@ use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * A class representing an LDP BasicContainer
+ */
 class BasicContainer extends Resource
 {
     /**
@@ -25,11 +28,13 @@ class BasicContainer extends Resource
         ];
 
         $res = new Response();
+        $res->setPublic();
         $res->headers->add($headers);
         $res->setLastModified($modifiedTime);
         $res->setEtag($this->getEtag($responseFormat, $request->headers->get('range')));
 
         if (!$res->isNotModified($request)) {
+            $algorithm = $this->getDigestAlgorithm($request->headers->get('want-digest'));
             $subject = $request->getUri();
             $predicate = self::LDP_NS . "contains";
 
@@ -73,9 +78,20 @@ class BasicContainer extends Resource
                 $data = json_decode($graph->serialise("jsonld"), true);
                 $dataset = $this->mapJsonLdForHTML($data, $app['config']['prefixes']);
                 $template = $app['config']['template'];
-                return $app['twig']->render($template, ["id" => $subject, "dataset" => $dataset]);
+                $content = $app['twig']->render($template, ["id" => $subject, "dataset" => $dataset]);
             } else {
                 $content = $graph->serialise($responseFormat);
+            }
+
+            if ($request->headers->get('range') === null) {
+                switch ($algorithm) {
+                    case "md5":
+                        $res->headers->set('Digest', 'md5=' . $this->md5($content));
+                        break;
+                    case "sha1":
+                        $res->headers->set('Digest', 'sha1=' . $this->sha1($content));
+                        break;
+                }
             }
 
             $res->setContent($content);

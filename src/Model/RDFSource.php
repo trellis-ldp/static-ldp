@@ -6,6 +6,9 @@ use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * A class representing an LDP RDFSource
+ */
 class RDFSource extends Resource
 {
     /**
@@ -17,6 +20,7 @@ class RDFSource extends Resource
         $responseFormat = $this->getResponseFormat($request);
 
         $res = new Response();
+        $res->setPublic();
         $res->headers->add($this->getHeaders($responseMimeType));
         $res->setLastModified(\DateTime::createFromFormat('U', filemtime($this->path)));
         $res->setEtag($this->getEtag($responseFormat, $request->headers->get('range')));
@@ -32,10 +36,17 @@ class RDFSource extends Resource
                 }
             }
 
+            $algorithm = $this->getDigestAlgorithm($request->headers->get('want-digest'));
             if ($this->canStream($responseFormat)) {
-                $digest = $this->wantDigest($request->headers->get('want-digest'));
-                if ($digest) {
-                    $res->headers->set('Digest', $digest);
+                if ($request->headers->get('range') === null) {
+                    switch ($algorithm) {
+                        case "md5":
+                            $res->headers->set('Digest', 'md5=' . $this->md5());
+                            break;
+                        case "sha1":
+                            $res->headers->set('Digest', 'sha1=' . $this->sha1());
+                            break;
+                    }
                 }
                 $filename = $this->path;
                 $stream = function () use ($filename) {
@@ -49,10 +60,21 @@ class RDFSource extends Resource
                     $data = json_decode($graph->serialise("jsonld"), true);
                     $dataset = $this->mapJsonLdForHTML($data, $app['config']['prefixes']);
                     $template = $app['config']['template'];
-                    return $app['twig']->render($template, ["id" => $request->getURI(), "dataset" => $dataset]);
+                    $content = $app['twig']->render($template, ["id" => $request->getURI(), "dataset" => $dataset]);
                 } else {
-                    $res->setContent($graph->serialise($responseFormat));
+                    $content = $graph->serialise($responseFormat);
                 }
+                if ($request->headers->get('range') === null) {
+                    switch ($algorithm) {
+                        case "md5":
+                            $res->headers->set('Digest', 'md5=' . $this->md5($content));
+                            break;
+                        case "sha1":
+                            $res->headers->set('Digest', 'sha1=' . $this->sha1($content));
+                            break;
+                    }
+                }
+                $res->setContent($content);
             }
         }
         return $res;
