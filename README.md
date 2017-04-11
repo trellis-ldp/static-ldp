@@ -14,12 +14,16 @@ A simple way to expose static assets as a read-only <a href="https://www.w3.org/
 
 ## Basics
 
-Clone this repository and configure the `sourceDirectory` to point
-to the location of your static resources.
+By installing `static-ldp` and configuring the `sourceDirectory` to point
+to the location of your static resources, you have a simple, read-only linked data server.
+
+## LDP Resources
 
 Individual files are served as `ldp:NonRDFSource` resources,
 and directories are served as `ldp:BasicContainer` resources.
 If a static file is a RDF file, then it is served as an `ldp:RDFSource`.
+
+## Describing an LDP NonRDFSources
 
 It is also possible to describe `ldp:NonRDFSource` resources via the `Link: <IRI>; rel="describedby"`
 header. For example, if a JPEG file is named `rosid_rosaceae.jpg`, then by adding an RDF file with
@@ -44,9 +48,8 @@ response is sent.
 
 To install `static-ldp`, follow these steps:
 
-1. clone this repository into a location on a webserver
-2. run `composer install`
-3. create a `./config/settings.yml` file like this:
+1. run `composer create-project trellis-ldp/static-ldp`.
+2. create a `./static-ldp/config/settings.yml` file like this:
 
     sourceDirectory: /path/to/data/directory
 
