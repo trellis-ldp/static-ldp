@@ -28,6 +28,18 @@ requests to `rosid_rosaceae.jpg` will include a link header pointing to the `ldp
 Similarly, the `ldp:RDFSource` will contain a link header (`rel="describes"`) pointing to the
 `ldp:NonRDFSource`.
 
+## Support for instance digests
+
+All resources support instance digests as defined in <a href="https://tools.ietf.org/html/rfc3230">RFC 3230</a>.
+What this means is that the response can include a `Digest` header so that it is possible to ensure end-to-end
+data integrity. Requests that include the header: `Want-Digest: md5` or `Want-Digest: sha1` will include responses
+that contain a digest corresponding to the response body. The only exception to this are range requests: `Want-Digest`
+headers will be ignored when a content range is requested.
+
+Only `md5` and `sha1` algorithms are supported; other algorithms will be ignored. It should be noted that, for large
+files, `Want-Digest` requests may perform considerably slower, as the digest will need to be computed before a
+response is sent.
+
 ## Installation
 
 To install `static-ldp`, follow these steps:
