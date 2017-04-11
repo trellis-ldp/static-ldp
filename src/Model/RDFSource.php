@@ -98,9 +98,9 @@ class RDFSource extends Resource
     {
         $filenameChunks = explode('.', $this->path);
         $extension = array_pop($filenameChunks);
-        foreach ($this->formats as $type) {
-            if ($type['extension'] == $extension) {
-                return $type['format'];
+        foreach ($this->formats as $format => $data) {
+            if ($data['extension'] == $extension) {
+                return $format;
             }
         }
         return null;

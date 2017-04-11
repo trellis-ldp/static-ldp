@@ -31,26 +31,26 @@ class TrellisConfiguration implements ConfigurationInterface
                     ->defaultFalse()
                 ->end()
                 ->arrayNode('validRdfFormats')
+                    ->useAttributeAsKey('format')
                     ->prototype("array")
                         ->children()
-                            ->scalarNode('format')->end()
                             ->scalarNode('mimeType')->end()
                             ->scalarNode('extension')->end()
                         ->end()
                     ->end()
-                    ->defaultValue([[
-                        "format" => "turtle",
-                        "mimeType" => "text/turtle",
-                        "extension" => "ttl"
-                    ], [
-                        "format" => "jsonld",
-                        "mimeType" => "application/ld+json",
-                        "extension" => "jsonld"
-                    ], [
-                        "format" => "ntriples",
-                        "mimeType" => "application/n-triples",
-                        "extension" => "nt"
-                    ]])
+                    ->defaultValue([
+                        "turtle" => [
+                            "mimeType" => "text/turtle",
+                            "extension" => "ttl"
+                        ],
+                        "jsonld" => [
+                            "mimeType" => "application/ld+json",
+                            "extension" => "jsonld"
+                        ],
+                        "ntriples" => [
+                            "mimeType" => "application/n-triples",
+                            "extension" => "nt"
+                        ]])
                 ->end()
                 ->arrayNode('prefixes')
                     ->prototype('scalar')->end()

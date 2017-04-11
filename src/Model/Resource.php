@@ -176,9 +176,10 @@ abstract class Resource
         if ($request->headers->has('accept')) {
             $accept = $request->getAcceptableContentTypes();
             foreach ($accept as $item) {
-                $index = array_search($item, array_column($this->formats, 'mimeType'));
-                if ($index !== false) {
-                    return $this->formats[$index]['format'];
+                foreach ($this->formats as $format => $data) {
+                    if ($data['mimeType'] === $item) {
+                        return $format;
+                    }
                 }
                 if (strpos($item, "text/html") !== false) {
                     return "html";
@@ -204,9 +205,10 @@ abstract class Resource
         if ($request->headers->has('accept')) {
             $accept = $request->getAcceptableContentTypes();
             foreach ($accept as $item) {
-                $index = array_search($item, array_column($this->formats, 'mimeType'));
-                if ($index !== false) {
-                    return $item;
+                foreach ($this->formats as $format => $data) {
+                    if ($data['mimeType'] === $item) {
+                        return $item;
+                    }
                 }
                 if (strpos($item, "text/html") !== false) {
                     return "text/html";

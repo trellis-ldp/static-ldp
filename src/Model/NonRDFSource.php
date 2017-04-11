@@ -35,10 +35,10 @@ class NonRDFSource extends Resource
                     $res->headers->set('Digest', "sha1=" . $this->sha1());
                     break;
             }
-            foreach ($this->formats as $type) {
-                $description = $this->path . "." . $type['extension'];
+            foreach ($this->formats as $format => $data) {
+                $description = $this->path . "." . $data['extension'];
                 if (file_exists($description)) {
-                    $link = "<" . $request->getUri().".".$type['extension'].">; rel=\"describedby\"";
+                    $link = "<" . $request->getUri().".".$data['extension'].">; rel=\"describedby\"";
                     $res->headers->set("Link", $link, false);
                 }
             }
