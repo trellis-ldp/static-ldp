@@ -9,6 +9,8 @@ A simple way to expose static assets as a read-only LDP server.
 
 * PHP 5.6+
 * [Composer](https://getcomposer.org/)
+* The <a href="http://php.net/manual/en/book.mbstring.php">mbstring</a> extension
+* The <a href="http://php.net/manual/en/book.pcre.php">pcre</a> extension
 
 ## Basics
 
@@ -71,7 +73,7 @@ header in responses.
 
 Generally speaking, the RDF formats should not be changed unless there is a need to
 support a serialization that is not included here. The RDF format (e.g. `turtle`,
-`jsonld`) must be an RDF serialization format supported by EasyRdf.
+`jsonld`) must be an RDF serialization format supported by <a href="http://www.easyrdf.org/">EasyRdf</a>.
 
     prefixes:
         dc: "http://purl.org/dc/terms/"
