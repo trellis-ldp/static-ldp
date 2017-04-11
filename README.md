@@ -12,9 +12,8 @@ A simple way to expose static assets as a read-only LDP server.
 
 ## Basics
 
-Clone this repository and setup your Apache to use it as
-document root. Then configure the `sourceDirectory` to point
-to the root directory of your static resources.
+Clone this repository and configure the `sourceDirectory` to point
+to the location of your static resources.
 
 Individual files are served as `ldp:NonRDFSource` resources,
 and directories are served as `ldp:BasicContainer` resources.
