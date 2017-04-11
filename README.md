@@ -5,6 +5,13 @@ A simple way to expose static assets as a read-only LDP server.
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%205.6-8892BF.svg?style=flat-square)](https://php.net/)
 [![Build Status](https://travis-ci.org/trellis-ldp/static-ldp.svg?branch=master)](https://travis-ci.org/trellis-ldp/static-ldp)
 
+## Requirements
+
+* PHP 5.6+
+* [Composer](https://getcomposer.org/)
+
+## Basics
+
 Clone this repository and setup your Apache to use it as
 document root. Then configure the `sourceDirectory` to point
 to the root directory of your static resources.
@@ -13,10 +20,12 @@ Individual files are served as `ldp:NonRDFSource` resources,
 and directories are served as `ldp:BasicContainer` resources.
 If a static file is a RDF file, then it is served as an `ldp:RDFSource`.
 
-## Requirements
-
-* PHP 5.6+
-* [Composer](https://getcomposer.org/)
+It is also possible to describe `ldp:NonRDFSource` resources via the `Link: <IRI>; rel="describedby"`
+header. For example, if a JPEG file is named `rosid_rosaceae.jpg`, then by adding an RDF file with
+the name `rosid_rosaceae.jpg.ttl` (or any valid RDF format such as `rosid_rosaceae.jpg.jsonld`), then
+requests to `rosid_rosaceae.jpg` will include a link header pointing to the `ldp:RDFSource`.
+Similarly, the `ldp:RDFSource` will contain a link header (`rel="describes"`) pointing to the
+`ldp:NonRDFSource`.
 
 ## Installation
 
