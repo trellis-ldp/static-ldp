@@ -214,7 +214,18 @@ abstract class Resource
                     return "text/html";
                 }
             }
-        }
-        return "text/turtle";
+		}
+		return "text/turtle";
+	}
+	
+	protected function getInputFormat($path) {
+		$filenameChunks = explode ( '.', $path );
+		$extension = array_pop ( $filenameChunks );
+		foreach ( $this->formats as $format => $data ) {
+			if ($data ['extension'] == $extension) {
+				return $format;
+    		}
+    	}
+    	return null;
     }
 }

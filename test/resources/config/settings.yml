@@ -1,1 +1,3 @@
 sourceDirectory: ./test/resources/test_directory
+extraPropertiesFilename: properties
+debug: true

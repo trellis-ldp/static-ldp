@@ -77,6 +77,13 @@ For requests without an `Accept` header, this is the RDF format used in response
 For `ldp:NonRDFSource` resources, this controls whether to include a `Content-Disposition`
 header in responses.
 
+    extraPropertiesFilename: properties
+
+For each directory that becomes a `ldp:BasicContainer` resource, an RDF file within that directory
+with this name will have its contents added to the RDF presented as a response for that resource
+(instead of becoming a child resource in its own right). This provides a means by which to add
+user-controlled properties to `ldp:BasicContainer`s.
+
     validRdfFormats:
         turtle:
             mimeType: text/turtle
