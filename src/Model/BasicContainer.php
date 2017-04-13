@@ -55,10 +55,10 @@ class BasicContainer extends Resource
                 $name = $fileInfo->getBasename("." . $fileInfo->getExtension());
                 # load extra properties for this container if available or add a containment triple
                 if ($name == $extraPropsFilename) {
-                	   $rdf = $fileInfo->openFile()->fread($fileInfo->getSize());
-                	   //error_log("Found rdf: " . $rdf);
-                	   $format = $this->getInputFormat($fileInfo->getFilename());
-                	   $graph->parse($rdf, $format, $subject);  	    
+                       $rdf = $fileInfo->openFile()->fread($fileInfo->getSize());
+                       //error_log("Found rdf: " . $rdf);
+                       $format = $this->getInputFormat($fileInfo->getFilename());
+                       $graph->parse($rdf, $format, $subject);
                 } else {
                     $filename = rtrim($subject, '/') . '/' . ltrim($fileInfo->getFilename(), '/');
                     $graph->addResource($subject, $predicate, $filename);

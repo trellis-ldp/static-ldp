@@ -41,10 +41,10 @@ $app->error(function (\Exception $e, Request $req, $code) {
             $headers["Link"] = TrellisConstants::READ_ONLY_RESOURCE_LINK;
             break;
         case (500):
-        	    $message = "Something went wrong!\n" . $e->getTraceAsString();
-        	    break;
+                $message = "Something went wrong!\n" . $e->getTraceAsString();
+            break;
         default:
-            	$message = "Something went wrong!\n";
+                $message = "Something went wrong!\n";
     }
     return new Response($message, $code, $headers);
 });
