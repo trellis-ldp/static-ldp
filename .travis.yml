@@ -15,6 +15,5 @@ env:
     TRELLIS_CONFIG_DIR=test/resources/config/
 
 script:
-  - php vendor/bin/phpcs --standard=PSR2 src test
-  - php vendor/bin/phpunit
+  - composer test
 
