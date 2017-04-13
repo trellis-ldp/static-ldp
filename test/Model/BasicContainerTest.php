@@ -47,8 +47,10 @@ class BasicContainerTest extends StaticLdpTestBase
         $request_mime = "text/turtle";
 
         $this->client->request('GET', "/", [], [], ['HTTP_ACCEPT' => $request_mime]);
+
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode(), "GET should be allowed.");
         $response = $this->client->getResponse();
+      
         $charset = $response->getCharset();
         $expected_mime = "{$request_mime}; charset={$charset}";
 
@@ -65,20 +67,23 @@ class BasicContainerTest extends StaticLdpTestBase
         $etag = $response->headers->get('etag');
 
         $this->client->request('GET', "/", [], [], ['HTTP_ACCEPT' => $expected_mime]);
+
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode(), "GET should be allowed a second time.");
         $this->assertTrue($this->client->getResponse()->headers->has("etag"), "Missing Etag header.");
         $this->assertEquals($etag, $this->client->getResponse()->headers->get('etag'), "Etags don't match.");
 
         $subject = "http://localhost/";
         $contains = "http://www.w3.org/ns/ldp#contains";
+        $summary = "http://www.w3.org/ns/activitystreams#summary";
         $graph = new \EasyRdf_Graph();
         $graph->parse($response->getContent(), "turtle", $subject);
-        $this->assertEquals(5, $graph->countTriples());
+        $this->assertEquals(6, $graph->countTriples());
         $this->assertTrue($graph->hasProperty($subject, "http://purl.org/dc/terms/modified"));
         $this->assertTrue($graph->isA($subject, "http://www.w3.org/ns/ldp#BasicContainer"));
         $this->assertTrue($graph->isA($subject, "http://www.w3.org/ns/ldp#Resource"));
         $this->assertTrue($graph->hasProperty($subject, $contains, $graph->resource("http://localhost/nobel_914.ttl")));
         $this->assertTrue($graph->hasProperty($subject, $contains, $graph->resource("http://localhost/riel.jpg")));
+        $this->assertTrue($graph->hasProperty($subject, $summary, "Some great stuff!"));
     }
 
     /**
@@ -124,7 +129,7 @@ class BasicContainerTest extends StaticLdpTestBase
         $contains = "http://www.w3.org/ns/ldp#contains";
         $graph = new \EasyRdf_Graph();
         $graph->parse($json, "jsonld", $subject);
-        $this->assertEquals(5, $graph->countTriples());
+        $this->assertEquals(6, $graph->countTriples());
         $this->assertTrue($graph->hasProperty($subject, "http://purl.org/dc/terms/modified"));
         $this->assertTrue($graph->isA($subject, "http://www.w3.org/ns/ldp#BasicContainer"));
         $this->assertTrue($graph->isA($subject, "http://www.w3.org/ns/ldp#Resource"));

@@ -47,12 +47,21 @@ class BasicContainer extends Resource
             $graph->addResource($subject, self::RDF_NS . "type", self::LDP_NS . "Resource");
             $graph->addResource($subject, self::RDF_NS . "type", self::LDP_NS . "BasicContainer");
 
+            $extraPropsFilename = $app['config']['extraPropertiesFilename'];
             foreach (new \DirectoryIterator($this->path) as $fileInfo) {
                 if ($fileInfo->isDot()) {
                     continue;
                 }
-                $filename = rtrim($subject, '/') . '/' . ltrim($fileInfo->getFilename(), '/');
-                $graph->addResource($subject, $predicate, $filename);
+                $name = $fileInfo->getBasename("." . $fileInfo->getExtension());
+                # load extra properties for this container if available or add a containment triple
+                if ($name == $extraPropsFilename) {
+                       $rdf = $fileInfo->openFile()->fread($fileInfo->getSize());
+                       $format = $this->getInputFormat($fileInfo->getFilename());
+                       $graph->parse($rdf, $format, $subject);
+                } else {
+                    $filename = rtrim($subject, '/') . '/' . ltrim($fileInfo->getFilename(), '/');
+                    $graph->addResource($subject, $predicate, $filename);
+                }
             }
 
             $accept = $request->headers->get('accept');

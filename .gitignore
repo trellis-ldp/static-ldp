@@ -1,2 +1,10 @@
 vendor/
 config/settings.yml
+composer.lock
+.buildpath
+.project
+.settings/
+composer.phar
+coverage.xml
+.DS_Store
+

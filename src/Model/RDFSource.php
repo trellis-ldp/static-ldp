@@ -55,7 +55,7 @@ class RDFSource extends Resource
                 return $app->stream($stream, 200, $res->headers->all());
             } else {
                 $graph = new \EasyRdf_Graph();
-                $graph->parseFile($this->path, $this->getInputFormat(), $request->getURI());
+                $graph->parseFile($this->path, $this->getInputFormat($this->path), $request->getURI());
                 if ($responseFormat == "html") {
                     $data = json_decode($graph->serialise("jsonld"), true);
                     $dataset = $this->mapJsonLdForHTML($data, $app['config']['prefixes']);
@@ -90,20 +90,8 @@ class RDFSource extends Resource
 
     private function canStream($responseFormat)
     {
-        $inputFormat = $this->getInputFormat();
+        $inputFormat = $this->getInputFormat($this->path);
         return $inputFormat === null || $inputFormat == $responseFormat;
-    }
-
-    private function getInputFormat()
-    {
-        $filenameChunks = explode('.', $this->path);
-        $extension = array_pop($filenameChunks);
-        foreach ($this->formats as $format => $data) {
-            if ($data['extension'] == $extension) {
-                return $format;
-            }
-        }
-        return null;
     }
 
     private function getHeaders($responseMimeType)
