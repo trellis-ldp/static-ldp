@@ -21,5 +21,12 @@
     },
     "autoload": {
         "psr-4": {"Trellis\\StaticLdp\\": "src/"}
+    },
+    "scripts": {
+        "check": "phpcs --standard=PSR2 src test index.php",
+        "test": [
+            "@check",
+            "phpunit"
+        ]
     }
 }
