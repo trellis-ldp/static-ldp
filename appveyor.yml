@@ -1,17 +1,28 @@
 version: '{build}'
 skip_tags: true
+build: false
+clone_folder: C:\projects\static-ldp
+
+init:
+    - SET PATH=C:\Program Files\OpenSSL;c:\tools\php;%PATH%
+    - SET COMPOSER_NO_INTERACTION=1
 
 install:
     - cinst -y php
+    - cd c:\tools\php71
+    - copy php.ini-production php.ini
+    - echo date.timezone="UTC" >> php.ini
+    - echo extension_dir=ext >> php.ini
+    - echo extension=php_openssl.dll >> php.ini
     - SET PATH=C:\tools\php71;%PATH%
+	- cd c:\projects\static-ldp
     - php -r "readfile('http://getcomposer.org/installer');" | php
     - php composer.phar install --prefer-source --no-interaction
 
 build_script:
+	- cd c:\projects\static-ldp
     - php composer.phar install
 
 test_script:
+	- cd c:\projects\static-ldp
     - php composer.phar test
-
-matrix:
-    fast_finish: true
