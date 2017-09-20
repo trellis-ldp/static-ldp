@@ -26,8 +26,7 @@ class NonRDFSource extends Resource
         $res->setLastModified(\DateTime::createFromFormat('U', filemtime($this->path)));
         $res->setEtag($this->getEtag($request->headers->get('range')));
         if (!$res->isNotModified($request)) {
-            $algorithm = $this->getDigestAlgorithm($request->headers->get('want-digest'));
-            switch ($algorithm) {
+            switch ($this->getDigestAlgorithm($request->headers->get('want-digest'))) {
                 case "md5":
                     $res->headers->set('Digest', "md5=" . $this->md5());
                     break;

@@ -35,19 +35,15 @@ class RDFSource extends Resource
                     $res->headers->set("Link", $link, false);
                 }
             }
-
-            $algorithm = $this->getDigestAlgorithm($request->headers->get('want-digest'));
+            switch ($this->getDigestAlgorithm($request->headers->get('want-digest'))) {
+                case "md5":
+                    $res->headers->set('Digest', 'md5=' . $this->md5());
+                    break;
+                case "sha1":
+                    $res->headers->set('Digest', 'sha1=' . $this->sha1());
+                    break;
+            }
             if ($this->canStream($responseFormat)) {
-                if ($request->headers->get('range') === null) {
-                    switch ($algorithm) {
-                        case "md5":
-                            $res->headers->set('Digest', 'md5=' . $this->md5());
-                            break;
-                        case "sha1":
-                            $res->headers->set('Digest', 'sha1=' . $this->sha1());
-                            break;
-                    }
-                }
                 $filename = $this->path;
                 $stream = function () use ($filename) {
                     readfile($filename);
@@ -63,16 +59,6 @@ class RDFSource extends Resource
                     $content = $app['twig']->render($template, ["id" => $request->getURI(), "dataset" => $dataset]);
                 } else {
                     $content = $graph->serialise($responseFormat);
-                }
-                if ($request->headers->get('range') === null) {
-                    switch ($algorithm) {
-                        case "md5":
-                            $res->headers->set('Digest', 'md5=' . $this->md5($content));
-                            break;
-                        case "sha1":
-                            $res->headers->set('Digest', 'sha1=' . $this->sha1($content));
-                            break;
-                    }
                 }
                 $res->setContent($content);
             }

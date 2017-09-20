@@ -34,7 +34,6 @@ class BasicContainer extends Resource
         $res->setEtag($this->getEtag($responseFormat, $request->headers->get('range')));
 
         if (!$res->isNotModified($request)) {
-            $algorithm = $this->getDigestAlgorithm($request->headers->get('want-digest'));
             $subject = $request->getUri();
             $predicate = self::LDP_NS . "contains";
 
@@ -90,17 +89,6 @@ class BasicContainer extends Resource
                 $content = $app['twig']->render($template, ["id" => $subject, "dataset" => $dataset]);
             } else {
                 $content = $graph->serialise($responseFormat);
-            }
-
-            if ($request->headers->get('range') === null) {
-                switch ($algorithm) {
-                    case "md5":
-                        $res->headers->set('Digest', 'md5=' . $this->md5($content));
-                        break;
-                    case "sha1":
-                        $res->headers->set('Digest', 'sha1=' . $this->sha1($content));
-                        break;
-                }
             }
 
             $res->setContent($content);
