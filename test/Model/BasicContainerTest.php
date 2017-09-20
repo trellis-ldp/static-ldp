@@ -33,7 +33,7 @@ class BasicContainerTest extends StaticLdpTestBase
 
     /**
      * Test Get of RDF directory listing/ BasicContainer
-     * @covers ::get
+     * @covers ::respond
      * @covers ::__construct
      * @covers ::getEtag
      */
@@ -50,7 +50,7 @@ class BasicContainerTest extends StaticLdpTestBase
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode(), "GET should be allowed.");
         $response = $this->client->getResponse();
-      
+
         $charset = $response->getCharset();
         $expected_mime = "{$request_mime}; charset={$charset}";
 
@@ -88,7 +88,7 @@ class BasicContainerTest extends StaticLdpTestBase
 
     /**
      * Test Get of RDF directory listing/ BasicContainer
-     * @covers ::get
+     * @covers ::respond
      * @covers ::__construct
      * @covers ::getEtag
      */
