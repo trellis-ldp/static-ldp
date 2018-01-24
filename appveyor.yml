@@ -4,14 +4,14 @@ build: false
 clone_folder: C:\projects\static-ldp
 
 init:
-    - SET PATH=C:\Program Files\OpenSSL;C:\tools\php71;%PATH%
+    - SET PATH=C:\Program Files\OpenSSL;C:\tools\php72;%PATH%
     - SET COMPOSER_NO_INTERACTION=1
 
 install:
     - ps: Set-Service wuauserv -StartupType Manual
     - cinst -y OpenSSL.Light
     - cinst -y php
-    - cd c:\tools\php71
+    - cd c:\tools\php72
     - copy php.ini-production php.ini
     - echo date.timezone="UTC" >> php.ini
     - echo extension=php_curl.dll >> php.ini
