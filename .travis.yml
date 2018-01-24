@@ -12,6 +12,10 @@ branches:
 before_install:
   - composer install
 
+matrix:
+  allow_failures:
+      - php: 7.2
+
 env:
     TRELLIS_CONFIG_DIR=test/resources/config/
 
