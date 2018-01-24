@@ -4,7 +4,7 @@
     "description": "LDP Server for static assets",
     "keywords": ["ldp"],
     "homepage": "https://github.com/trellis-ldp/static-ldp",
-    "license": "Apache2",
+    "license": "Apache-2.0",
     "require": {
         "php": ">=5.6.0",
         "silex/silex": "^2.0",
