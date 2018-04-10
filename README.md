@@ -35,9 +35,9 @@ Individual files are served as `ldp:NonRDFSource` resources,
 and directories are served as `ldp:BasicContainer` resources.
 If a static file is a RDF file, then it is served as an `ldp:RDFSource`.
 
-## Describing an LDP NonRDFSources
+## Describing LDP Non-RDF Resources
 
-It is also possible to describe `ldp:NonRDFSource` resources via the `Link: <IRI>; rel="describedby"`
+It is also possible to describe an `ldp:NonRDFSource` via the `Link: <IRI>; rel="describedby"`
 header. For example, if a JPEG file is named `rosid_rosaceae.jpg`, then by adding an RDF file with
 the name `rosid_rosaceae.jpg.ttl` (or any valid RDF format such as `rosid_rosaceae.jpg.jsonld`), then
 requests to `rosid_rosaceae.jpg` will include a link header pointing to the `ldp:RDFSource`.
