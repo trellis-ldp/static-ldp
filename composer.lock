@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f627fa999ec82d9d858267a329df2203",
+    "content-hash": "9794d4a59a5f6760bbc6c06ff69ff088",
     "packages": [
         {
             "name": "easyrdf/easyrdf",
@@ -2414,58 +2414,36 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "2.0.0",
+            "version": "3.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "5b63fd3fe960e2020770c845e04254e5ca2b722a"
+                "reference": "4842476c434e375f9d3182ff7b89059583aa8b27"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/5b63fd3fe960e2020770c845e04254e5ca2b722a",
-                "reference": "5b63fd3fe960e2020770c845e04254e5ca2b722a",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/4842476c434e375f9d3182ff7b89059583aa8b27",
+                "reference": "4842476c434e375f9d3182ff7b89059583aa8b27",
                 "shasum": ""
             },
             "require": {
+                "ext-simplexml": "*",
                 "ext-tokenizer": "*",
-                "php": ">=5.1.2"
+                "ext-xmlwriter": "*",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0 || ^7.0"
             },
             "bin": [
-                "scripts/phpcs",
-                "scripts/phpcbf"
+                "bin/phpcs",
+                "bin/phpcbf"
             ],
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-phpcs-fixer": "2.0.x-dev"
+                    "dev-master": "3.x-dev"
                 }
-            },
-            "autoload": {
-                "classmap": [
-                    "CodeSniffer.php",
-                    "CodeSniffer/CLI.php",
-                    "CodeSniffer/Exception.php",
-                    "CodeSniffer/File.php",
-                    "CodeSniffer/Fixer.php",
-                    "CodeSniffer/Report.php",
-                    "CodeSniffer/Reporting.php",
-                    "CodeSniffer/Sniff.php",
-                    "CodeSniffer/Tokens.php",
-                    "CodeSniffer/Reports/",
-                    "CodeSniffer/Tokenizers/",
-                    "CodeSniffer/DocGenerators/",
-                    "CodeSniffer/Standards/AbstractPatternSniff.php",
-                    "CodeSniffer/Standards/AbstractScopeSniff.php",
-                    "CodeSniffer/Standards/AbstractVariableSniff.php",
-                    "CodeSniffer/Standards/IncorrectPatternException.php",
-                    "CodeSniffer/Standards/Generic/Sniffs/",
-                    "CodeSniffer/Standards/MySource/Sniffs/",
-                    "CodeSniffer/Standards/PEAR/Sniffs/",
-                    "CodeSniffer/Standards/PSR1/Sniffs/",
-                    "CodeSniffer/Standards/PSR2/Sniffs/",
-                    "CodeSniffer/Standards/Squiz/Sniffs/",
-                    "CodeSniffer/Standards/Zend/Sniffs/"
-                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -2477,35 +2455,35 @@
                     "role": "lead"
                 }
             ],
-            "description": "PHP_CodeSniffer tokenises PHP, JavaScript and CSS files and detects violations of a defined set of coding standards.",
+            "description": "PHP_CodeSniffer tokenizes PHP, JavaScript and CSS files and detects violations of a defined set of coding standards.",
             "homepage": "http://www.squizlabs.com/php-codesniffer",
             "keywords": [
                 "phpcs",
                 "standards"
             ],
-            "time": "2014-12-05T00:14:12+00:00"
+            "time": "2018-02-20T21:35:23+00:00"
         },
         {
             "name": "symfony/browser-kit",
-            "version": "v3.2.0",
+            "version": "v3.4.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/browser-kit.git",
-                "reference": "34348c2691ce6254e8e008026f4c5e72c22bb318"
+                "reference": "840bb6f0d5b3701fd768b68adf7193c2d0f98f79"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/browser-kit/zipball/34348c2691ce6254e8e008026f4c5e72c22bb318",
-                "reference": "34348c2691ce6254e8e008026f4c5e72c22bb318",
+                "url": "https://api.github.com/repos/symfony/browser-kit/zipball/840bb6f0d5b3701fd768b68adf7193c2d0f98f79",
+                "reference": "840bb6f0d5b3701fd768b68adf7193c2d0f98f79",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.9",
-                "symfony/dom-crawler": "~2.8|~3.0"
+                "php": "^5.5.9|>=7.0.8",
+                "symfony/dom-crawler": "~2.8|~3.0|~4.0"
             },
             "require-dev": {
-                "symfony/css-selector": "~2.8|~3.0",
-                "symfony/process": "~2.8|~3.0"
+                "symfony/css-selector": "~2.8|~3.0|~4.0",
+                "symfony/process": "~2.8|~3.0|~4.0"
             },
             "suggest": {
                 "symfony/process": ""
@@ -2513,7 +2491,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.2-dev"
+                    "dev-master": "3.4-dev"
                 }
             },
             "autoload": {
@@ -2540,7 +2518,7 @@
             ],
             "description": "Symfony BrowserKit Component",
             "homepage": "https://symfony.com",
-            "time": "2016-10-13T13:35:11+00:00"
+            "time": "2018-03-19T22:32:39+00:00"
         },
         {
             "name": "symfony/dom-crawler",

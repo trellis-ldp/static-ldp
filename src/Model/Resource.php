@@ -159,7 +159,6 @@ abstract class Resource
             $data[] = $graph;
         }
         return $data;
-
     }
 
     /**

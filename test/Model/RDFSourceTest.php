@@ -32,7 +32,7 @@ class RDFSourceTest extends StaticLdpTestBase
      */
     public function testGetRDFSource()
     {
-         $expected_links = [
+        $expected_links = [
             "<" . Resource::LDP_NS . "Resource>; rel=\"type\"",
             "<" . Resource::LDP_NS . "RDFSource>; rel=\"type\""
         ];
@@ -80,7 +80,7 @@ class RDFSourceTest extends StaticLdpTestBase
      */
     public function testGetRDFSourceJSON()
     {
-         $expected_links = [
+        $expected_links = [
             "<" . Resource::LDP_NS . "Resource>; rel=\"type\"",
             "<" . Resource::LDP_NS . "RDFSource>; rel=\"type\""
         ];
