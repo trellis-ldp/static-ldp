@@ -8,8 +8,8 @@
     "require": {
         "php": ">=5.6.0",
         "silex/silex": "^2.0",
-        "symfony/config": "^3.2",
-        "symfony/yaml": "^3.0",
+        "symfony/config": "^3.4",
+        "symfony/yaml": "^3.4",
         "easyrdf/easyrdf": "^0.9.1",
         "ml/json-ld": "^1.0",
         "twig/twig": "^1.33"
