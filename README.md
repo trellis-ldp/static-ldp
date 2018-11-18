@@ -2,13 +2,13 @@
 
 A simple way to expose static assets as a read-only <a href="https://www.w3.org/TR/ldp/">LDP</a> server.
 
-[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%205.6-8892BF.svg?style=flat-square)](https://php.net/)
+[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.1-8892BF.svg?style=flat-square)](https://php.net/)
 [![Build Status](https://travis-ci.com/trellis-ldp/static-ldp.svg?branch=master)](https://travis-ci.com/trellis-ldp/static-ldp)
 [![Build status](https://ci.appveyor.com/api/projects/status/pad3wdgd43lg1nou?svg=true)](https://ci.appveyor.com/project/acoburn/static-ldp)
 
 ## Requirements
 
-* PHP 5.6+
+* PHP 7.1+
 * [Composer](https://getcomposer.org/)
 * The <a href="http://php.net/manual/en/book.mbstring.php">mbstring</a> extension
 * The <a href="http://php.net/manual/en/book.pcre.php">pcre</a> extension
