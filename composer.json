@@ -11,7 +11,7 @@
         "symfony/config": "^3.4",
         "symfony/yaml": "^3.4",
         "easyrdf/easyrdf": "^0.9.1",
-        "ml/json-ld": "^1.0",
+        "ml/json-ld": "^1.1",
         "twig/twig": "^1.33"
     },
     "require-dev": {
