@@ -1,31 +1,18 @@
 <?php
 
-namespace Trellis\StaticLdp\Model;
+namespace App\Tests\Model;
 
-use Trellis\StaticLdp\StaticLdpTestBase;
+use App\Tests\StaticLdpTestBase;
+use App\Model\Resource;
 
 /**
  * Unit Test of NonRDFSource class.
  *
- * @coversDefaultClass \Trellis\StaticLdp\Model\NonRDFSource
+ * @coversDefaultClass \App\Model\NonRDFSource
  * @group unittest
  */
 class NonRDFSourceTest extends StaticLdpTestBase
 {
-
-    /**
-     * @var \Symfony\Component\BrowserKit\Client
-     */
-    protected $client;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setUp()
-    {
-        parent::setUp();
-        $this->client = $this->createClient();
-    }
 
     /**
      * Test GET a NonRDFSource
@@ -36,7 +23,7 @@ class NonRDFSourceTest extends StaticLdpTestBase
             "<" . Resource::LDP_NS . "Resource>; rel=\"type\"",
             "<" . Resource::LDP_NS . "NonRDFSource>; rel=\"type\""
         ];
-        $crawler = $this->client->request('GET', "/riel.jpg");
+        $this->client->request('GET', "/riel.jpg");
         $response = $this->client->getResponse();
 
         $this->assertEquals($response->getStatusCode(), 200);

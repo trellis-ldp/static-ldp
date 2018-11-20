@@ -1,10 +1,13 @@
 <?php
 
-namespace Trellis\StaticLdp\Model;
+namespace App\Model;
 
-use Silex\Application;
+use App\TrellisConfiguration;
+use App\Model\Resource;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Twig\Environment;
 
 /**
  * A class representing an LDP RDFSource
@@ -14,7 +17,7 @@ class RDFSource extends Resource
     /**
      * {@inheritdoc}
      */
-    public function respond(Application $app, Request $request, array $options = array())
+    public function respond(Request $request, Environment $twig_provider, array $options = array())
     {
         $responseMimeType = $this->getResponseMimeType($request);
         $responseFormat = $this->getResponseFormat($request);
@@ -48,15 +51,15 @@ class RDFSource extends Resource
                 $stream = function () use ($filename) {
                     readfile($filename);
                 };
-                return $app->stream($stream, 200, $res->headers->all());
+                return new StreamedResponse($stream, 200, $res->headers->all());
             } else {
                 $graph = new \EasyRdf_Graph();
                 $graph->parseFile($this->path, $this->getInputFormat($this->path), $request->getURI());
                 if ($responseFormat == "html") {
                     $data = json_decode($graph->serialise("jsonld"), true);
-                    $dataset = $this->mapJsonLdForHTML($data, $app['config']['prefixes']);
-                    $template = $app['config']['template'];
-                    $content = $app['twig']->render($template, ["id" => $request->getURI(), "dataset" => $dataset]);
+                    $dataset = $this->mapJsonLdForHTML($data, $this->resourceConfig['prefixes']);
+                    $template = $this->resourceConfig['template'];
+                    $content = $twig_provider->render($template, ["id" => $request->getURI(), "dataset" => $dataset]);
                 } else {
                     $content = $graph->serialise($responseFormat);
                 }
@@ -70,7 +73,6 @@ class RDFSource extends Resource
     {
         $mtime = filemtime($this->path);
         $size = filesize($this->path);
-        $byteRange = $range ? $range : "";
         return sha1($mtime . $size . $responseFormat . $range);
     }
 

@@ -1,35 +1,16 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: whikloj
- * Date: 2017-04-06
- * Time: 9:26 PM
- */
 
-namespace Trellis\StaticLdp\Model;
+namespace App\Tests\Model;
 
-use Trellis\StaticLdp\StaticLdpTestBase;
+use App\Model\Resource;
+use App\Tests\StaticLdpTestBase;
 
 /**
- * @coversDefaultClass \Trellis\StaticLdp\Model\BasicContainer
+ * @coversDefaultClass \App\Model\BasicContainer
  * @group unittest
  */
 class BasicContainerTest extends StaticLdpTestBase
 {
-
-    /**
-     * @var \Symfony\Component\BrowserKit\Client
-     */
-    protected $client;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setUp()
-    {
-        parent::setUp();
-        $this->client = $this->createClient();
-    }
 
     /**
      * Test Get of RDF directory listing/ BasicContainer

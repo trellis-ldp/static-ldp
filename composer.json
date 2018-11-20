@@ -7,26 +7,71 @@
     "license": "Apache-2.0",
     "require": {
         "php": ">=7.1.0",
-        "silex/silex": "^2.0",
-        "symfony/config": "^3.4",
-        "symfony/yaml": "^3.4",
+        "ext-ctype": "*",
+        "ext-iconv": "*",
+        "symfony/console": "4.1.*",
+        "symfony/flex": "^1.1",
+        "symfony/framework-bundle": "4.1.*",
+        "symfony/yaml": "4.1.*",
         "easyrdf/easyrdf": "^0.9.1",
         "ml/json-ld": "^1.1",
-        "twig/twig": "^1.33"
+        "symfony/twig-bundle": "4.1.*"
     },
     "require-dev": {
+        "symfony/dotenv": "4.1.*",
+        "symfony/web-server-bundle": "4.1.*",
         "squizlabs/php_codesniffer": "^3.2",
-        "symfony/browser-kit": "^3.4",
-        "phpunit/phpunit": "^5.7"
+        "symfony/browser-kit": "4.1.*",
+        "symfony/phpunit-bridge": "4.1.*"
+    },
+    "config": {
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true
     },
     "autoload": {
-        "psr-4": {"Trellis\\StaticLdp\\": "src/"}
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Tests\\": "test/"
+        }
+    },
+    "replace": {
+        "paragonie/random_compat": "2.*",
+        "symfony/polyfill-ctype": "*",
+        "symfony/polyfill-iconv": "*",
+        "symfony/polyfill-php71": "*",
+        "symfony/polyfill-php70": "*",
+        "symfony/polyfill-php56": "*"
     },
     "scripts": {
-        "check": "phpcs --standard=PSR2 src test index.php",
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+        },
+        "post-install-cmd": [
+            "@auto-scripts"
+        ],
+        "post-update-cmd": [
+            "@auto-scripts"
+        ],
+        "check": "phpcs --standard=PSR2 src test",
         "test": [
             "@check",
             "phpunit"
         ]
+    },
+    "conflict": {
+        "symfony/symfony": "*"
+    },
+    "extra": {
+        "symfony": {
+            "allow-contrib": false,
+            "require": "4.1.*"
+        }
     }
 }

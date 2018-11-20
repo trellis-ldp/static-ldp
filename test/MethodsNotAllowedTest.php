@@ -1,32 +1,19 @@
 <?php
 
-namespace Trellis\StaticLdp;
+namespace App\Tests;
 
 /**
  * Unit Test of methods not allowed response.
  *
- * @coversDefaultClass \Trellis\StaticLdp
+ * @coversDefaultClass \App\Controller\ResourceController
  * @group unittest
  */
 class MethodsNotAllowedTest extends StaticLdpTestBase
 {
 
     /**
-     * @var \Symfony\Component\BrowserKit\Client
-     */
-    protected $client;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setUp()
-    {
-        parent::setUp();
-        $this->client = $this->createClient();
-    }
-
-    /**
      * Test Post returns 405 with constrainedBy header
+     * @expectedException \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException
      */
     public function testPostMethod()
     {
@@ -48,6 +35,7 @@ class MethodsNotAllowedTest extends StaticLdpTestBase
 
     /**
      * Test Patch returns 405 with constrainedBy header
+     * @expectedException \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException
      */
     public function testPatchMethod()
     {
@@ -69,6 +57,7 @@ class MethodsNotAllowedTest extends StaticLdpTestBase
 
     /**
      * Test Put returns 405 with constrainedBy header
+     * @expectedException \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException
      */
     public function testPutMethod()
     {

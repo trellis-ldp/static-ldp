@@ -1,5 +1,6 @@
 vendor/
 config/settings.yml
+settings.yml
 composer.lock
 .buildpath
 .project
@@ -8,3 +9,18 @@ composer.phar
 coverage.xml
 .DS_Store
 
+###> symfony/phpunit-brige ###
+/bin/.phpunit
+###< symfony/phpunit-bridge ###
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.*.local
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> symfony/web-server-bundle ###
+/.web-server-pid
+###< symfony/web-server-bundle ###
