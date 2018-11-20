@@ -4,9 +4,9 @@ namespace App\Model;
 
 use App\Trellis\StaticLdp\Provider\StaticLdpProvider;
 use Silex\Application;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Twig\Environment;
 
 /**
@@ -44,11 +44,7 @@ class NonRDFSource extends Resource
                     $res->headers->set("Link", $link, false);
                 }
             }
-            $filename = $this->path;
-            $stream = function () use ($filename) {
-                readfile($filename);
-            };
-            return new StreamedResponse($stream, 200, $res->headers->all());
+            return new BinaryFileResponse($this->path, 200, $res->headers->all());
         }
         return $res;
     }

@@ -1,5 +1,5 @@
 sourceDirectory: /mnt/data/ldp/
-template: default.twig
+template: default.html.twig
 defaultRdfFormat: turtle
 extraPropertiesFilename: properties
 contentDisposition: false

@@ -43,7 +43,7 @@ class TrellisConfiguration implements ConfigurationInterface
                     ->end()
                     ->defaultValue([
                         "turtle" => [
-                            "mimeType" => "text/turtle",
+                            "mimeType" => "text/turtle; charset=UTF-8",
                             "extension" => "ttl"
                         ],
                         "jsonld" => [
