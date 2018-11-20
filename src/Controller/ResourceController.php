@@ -75,7 +75,7 @@ class ResourceController extends AbstractController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function get($path)
+    public function get(string $path)
     {
 
         $docroot = $this->configuration['sourceDirectory'];
