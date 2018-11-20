@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<phpunit bootstrap="./vendor/autoload.php" colors="true">
+<phpunit bootstrap="./vendor/autoload.php" colors="true" verbose="true">
     <php>
-        <server name="KERNEL_CLASS" value="App\Kernel" />
+        <server name="KERNEL_CLASS" value="App\Kernel"/>
         <server name="APP_ENV" value="test" />
         <server name="APP_DEBUG" value="false"/>
     </php>

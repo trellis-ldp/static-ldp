@@ -48,10 +48,10 @@ class BasicContainerTest extends StaticLdpTestBase
         $etag = $response->headers->get('etag');
 
         $this->client->request('GET', "/", [], [], ['HTTP_ACCEPT' => $expected_mime]);
-
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode(), "GET should be allowed a second time.");
-        $this->assertTrue($this->client->getResponse()->headers->has("etag"), "Missing Etag header.");
-        $this->assertEquals($etag, $this->client->getResponse()->headers->get('etag'), "Etags don't match.");
+        $response = $this->client->getResponse();
+        $this->assertEquals(200, $response->getStatusCode(), "GET should be allowed a second time.");
+        $this->assertTrue($response->headers->has("etag"), "Missing Etag header.");
+        $this->assertEquals($etag, $response->headers->get('etag'), "Etags don't match.");
 
         $subject = "http://localhost/";
         $contains = "http://www.w3.org/ns/ldp#contains";

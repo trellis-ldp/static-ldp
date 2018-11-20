@@ -62,7 +62,7 @@
         "check": "phpcs --standard=PSR2 src test",
         "test": [
             "@check",
-            "phpunit"
+            "bin/phpunit"
         ]
     },
     "conflict": {
