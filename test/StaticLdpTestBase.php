@@ -1,15 +1,24 @@
 <?php
 
-namespace Trellis\StaticLdp;
+namespace App\Tests;
 
-use Silex\WebTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class StaticLdpTestBase extends WebTestCase
 {
-    public function createApplication()
+
+    /**
+     * @var \Symfony\Component\BrowserKit\Client
+     */
+    protected $client;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setUp()
     {
-        // must return an Application instance
-        $_ENV['TRELLIS_CONFIG_DIR'] = __DIR__ . '/resources/config';
-        return (require __DIR__ . '/../src/app.php');
+        parent::setUp();
+        $this->client = static::createClient();
+        $this->client->catchExceptions(false);
     }
 }

@@ -1,9 +1,9 @@
 <?php
 
-namespace Trellis\StaticLdp\Model;
+namespace App\Model;
 
-use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
+use Twig\Environment;
 
 /**
  * A class representing an LDP Resource
@@ -14,31 +14,37 @@ abstract class Resource
     const RDF_NS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
     const DCTERMS_NS = "http://purl.org/dc/terms/";
 
+    protected $resourceConfig;
+
     /**
      * Create a LDP Resource
      * @param $path
      *    the file path to the resource
-     * @param $formats array
+     * @param array $formats
      *    the supported RDF formats
+     * @param array $resourceConfig
+     *   The configuration.
+     *
      */
-    public function __construct($path, $formats)
+    public function __construct($path, array $formats, array $resourceConfig)
     {
         $this->path = $path;
         $this->formats = $formats;
+        $this->resourceConfig = $resourceConfig;
     }
 
     /**
      * Get a representation of the given resource
      *
-     * @param \Silex\Application $app
-     *   The Silex application.
      * @param \Symfony\Component\HttpFoundation\Request $request
-     *   The incoming request
+     *   The request.
+     * @param \Twig\Environment $twig_provider
+     *   The twig provider.
      * @param array $options
-     *   Optional parameters
+     *   Options for the response.
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    abstract public function respond(Application $app, Request $request, array $options);
+    abstract public function respond(Request $request, Environment $twig_provider, array $options);
 
     /**
      * Compute the SHA1 checksum of a file
@@ -108,7 +114,7 @@ abstract class Resource
      *      The expanded JSON-LD parsed into a PHP array
      * @param $prefixes
      *      User-defined prefixes to use
-     * @return Array
+     * @return array
      *      A new array suitable for the Twig templates
      */
     protected function mapJsonLdForHTML($jsonld, $prefixes)
@@ -191,8 +197,6 @@ abstract class Resource
     /**
      * Find the mimeType for the request
      *
-     * @param array $validRdfFormats
-     *   Supported formats from the config.
      * @param \Symfony\Component\HttpFoundation\Request $request
      *   The current request.
      *
@@ -214,9 +218,9 @@ abstract class Resource
                 }
             }
         }
-        return "text/turtle";
+        return "text/turtle; charset=UTF-8";
     }
-    
+
     protected function getInputFormat($path)
     {
         $filenameChunks = explode('.', $path);

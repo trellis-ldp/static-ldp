@@ -7,6 +7,9 @@ init:
     - SET PATH=C:\Program Files\OpenSSL;C:\tools\php71;%PATH%
     - SET COMPOSER_NO_INTERACTION=1
 
+environment:
+    TRELLIS_CONFIG_DIR: test/resources/config/
+
 install:
     - ps: Set-Service wuauserv -StartupType Manual
     - cinst -y OpenSSL.Light

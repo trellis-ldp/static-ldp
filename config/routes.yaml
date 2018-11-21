@@ -1,0 +1,13 @@
+main:
+  path: /{path}
+  defaults:
+    path: ''
+  requirements:
+    path: '.+'
+  methods: [HEAD, GET]
+  controller: App\Controller\ResourceController::get
+
+options:
+  path: /
+  methods: [OPTIONS]
+  controller: App\Controller\ResourceController::options

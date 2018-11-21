@@ -1,10 +1,11 @@
 <?php
 
-namespace Trellis\StaticLdp\Model;
+namespace App\Model;
 
-use Silex\Application;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Twig\Environment;
 
 /**
  * A class representing an LDP NonRDFSource
@@ -14,7 +15,7 @@ class NonRDFSource extends Resource
     /**
      * {@inheritdoc}
      */
-    public function respond(Application $app, Request $request, array $options = array())
+    public function respond(Request $request, Environment $twig_provider, array $options = array())
     {
         $contentDisposition = true;
         if (array_key_exists("contentDisposition", $options)) {
@@ -41,11 +42,7 @@ class NonRDFSource extends Resource
                     $res->headers->set("Link", $link, false);
                 }
             }
-            $filename = $this->path;
-            $stream = function () use ($filename) {
-                readfile($filename);
-            };
-            return $app->stream($stream, 200, $res->headers->all());
+            return new BinaryFileResponse($this->path, 200, $res->headers->all());
         }
         return $res;
     }

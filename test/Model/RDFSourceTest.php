@@ -1,31 +1,18 @@
 <?php
 
-namespace Trellis\StaticLdp\Model;
+namespace App\Tests\Model;
 
-use Trellis\StaticLdp\StaticLdpTestBase;
+use App\Tests\StaticLdpTestBase;
+use App\Model\Resource;
 
 /**
  * Unit Test of RDFSource class.
  *
- * @coversDefaultClass \Trellis\StaticLdp\Model\RDFSource
+ * @coversDefaultClass \App\Model\RDFSource
  * @group unittest
  */
 class RDFSourceTest extends StaticLdpTestBase
 {
-
-    /**
-     * @var \Symfony\Component\BrowserKit\Client
-     */
-    protected $client;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setUp()
-    {
-        parent::setUp();
-        $this->client = $this->createClient();
-    }
 
     /**
      * Test GET a RDFSource
@@ -42,7 +29,6 @@ class RDFSourceTest extends StaticLdpTestBase
         $this->client->request('GET', "/nobel_914.ttl", [], [], ['HTTP_ACCEPT' => $request_mime]);
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode(), "GET should be allowed.");
         $response = $this->client->getResponse();
-        $response->sendContent();
         $charset = $response->getCharset();
         $expected_mime = "{$request_mime}; charset={$charset}";
 
@@ -63,9 +49,11 @@ class RDFSourceTest extends StaticLdpTestBase
         $this->assertEquals($size, $response->headers->get('Content-Length'), "Content-Length header incorrect");
 
         $this->client->request('GET', "/nobel_914.ttl", [], [], ['HTTP_ACCEPT' => $expected_mime]);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode(), "GET should be allowed a second time.");
-        $this->assertTrue($this->client->getResponse()->headers->has("etag"), "Missing Etag header.");
-        $this->assertEquals($etag, $this->client->getResponse()->headers->get('etag'), "Etags don't match.");
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(200, $response->getStatusCode(), "GET should be allowed a second time.");
+        $this->assertTrue($response->headers->has("etag"), "Missing Etag header.");
+        $this->assertEquals($etag, $response->headers->get('etag'), "Etags don't match.");
 
         $headers = [
             'HTTP_ACCEPT' => $expected_mime,
@@ -90,7 +78,6 @@ class RDFSourceTest extends StaticLdpTestBase
         $this->client->request('GET', "/nobel_914.ttl", [], [], ['HTTP_ACCEPT' => $request_mime]);
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode(), "GET should be allowed.");
         $response = $this->client->getResponse();
-        $content = $response->getContent();
 
         $this->assertTrue($response->headers->has('Link'), "Missing Link header");
         $this->assertEquals($expected_links, $response->headers->get("Link", null, false), "Link headers incorrect.");

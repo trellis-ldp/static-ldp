@@ -1,35 +1,16 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: whikloj
- * Date: 2017-04-06
- * Time: 9:26 PM
- */
 
-namespace Trellis\StaticLdp\Model;
+namespace App\Tests\Model;
 
-use Trellis\StaticLdp\StaticLdpTestBase;
+use App\Model\Resource;
+use App\Tests\StaticLdpTestBase;
 
 /**
- * @coversDefaultClass \Trellis\StaticLdp\Model\BasicContainer
+ * @coversDefaultClass \App\Model\BasicContainer
  * @group unittest
  */
 class BasicContainerTest extends StaticLdpTestBase
 {
-
-    /**
-     * @var \Symfony\Component\BrowserKit\Client
-     */
-    protected $client;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setUp()
-    {
-        parent::setUp();
-        $this->client = $this->createClient();
-    }
 
     /**
      * Test Get of RDF directory listing/ BasicContainer
@@ -67,10 +48,10 @@ class BasicContainerTest extends StaticLdpTestBase
         $etag = $response->headers->get('etag');
 
         $this->client->request('GET', "/", [], [], ['HTTP_ACCEPT' => $expected_mime]);
-
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode(), "GET should be allowed a second time.");
-        $this->assertTrue($this->client->getResponse()->headers->has("etag"), "Missing Etag header.");
-        $this->assertEquals($etag, $this->client->getResponse()->headers->get('etag'), "Etags don't match.");
+        $response = $this->client->getResponse();
+        $this->assertEquals(200, $response->getStatusCode(), "GET should be allowed a second time.");
+        $this->assertTrue($response->headers->has("etag"), "Missing Etag header.");
+        $this->assertEquals($etag, $response->headers->get('etag'), "Etags don't match.");
 
         $subject = "http://localhost/";
         $contains = "http://www.w3.org/ns/ldp#contains";

@@ -1,20 +1,21 @@
 <?php
 
-namespace Trellis\StaticLdp\Model;
+namespace App\Model;
 
-use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Twig\Environment;
 
 /**
  * A class representing an LDP BasicContainer
  */
 class BasicContainer extends Resource
 {
-    /**
+
+  /**
      * {@inheritdoc}
      */
-    public function respond(Application $app, Request $request, array $options = array())
+    public function respond(Request $request, Environment $twig_provider, array $options = array())
     {
         $responseMimeType = $this->getResponseMimeType($request);
         $responseFormat = $this->getResponseFormat($request);
@@ -46,7 +47,7 @@ class BasicContainer extends Resource
             $graph->addResource($subject, self::RDF_NS . "type", self::LDP_NS . "Resource");
             $graph->addResource($subject, self::RDF_NS . "type", self::LDP_NS . "BasicContainer");
 
-            $extraPropsFilename = $app['config']['extraPropertiesFilename'];
+            $extraPropsFilename = $options['extraPropertiesFilename'];
             foreach (new \DirectoryIterator($this->path) as $fileInfo) {
                 if ($fileInfo->isDot()) {
                     continue;
@@ -67,26 +68,16 @@ class BasicContainer extends Resource
             if ($responseFormat == "jsonld") {
                 $content = $graph->serialise($responseFormat, $this->getSerialisationOptions($accept));
             } elseif ($responseFormat == "html") {
-                $options = [
-                    "compact" => true,
-                    "context" => (object) [
-                        'id' => '@id',
-                        'type' => '@type',
-                        'modified' => (object) [
-                            '@id' => self::DCTERMS_NS . 'modified',
-                            '@type' => 'http://www.w3.org/2001/XMLSchema#dateTime'
-                        ],
-                        'contains' => (object) [
-                            '@id' => self::LDP_NS . 'contains',
-                            '@type' => '@id'
-                        ]
-                    ]
-                ];
-
                 $data = json_decode($graph->serialise("jsonld"), true);
-                $dataset = $this->mapJsonLdForHTML($data, $app['config']['prefixes']);
-                $template = $app['config']['template'];
-                $content = $app['twig']->render($template, ["id" => $subject, "dataset" => $dataset]);
+                $dataset = $this->mapJsonLdForHTML($data, $this->resourceConfig['prefixes']);
+
+                $content = $twig_provider->render(
+                    $this->resourceConfig['template'],
+                    [
+                        "id" => $subject,
+                        "dataset" => $dataset
+                    ]
+                );
             } else {
                 $content = $graph->serialise($responseFormat);
             }

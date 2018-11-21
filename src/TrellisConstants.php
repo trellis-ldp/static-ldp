@@ -1,6 +1,6 @@
 <?php
 
-namespace Trellis\StaticLdp;
+namespace App;
 
 class TrellisConstants
 {

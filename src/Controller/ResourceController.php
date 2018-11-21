@@ -1,46 +1,84 @@
 <?php
 
-namespace Trellis\StaticLdp\Controller;
+namespace App\Controller;
 
-use Trellis\StaticLdp\Model\BasicContainer;
-use Trellis\StaticLdp\Model\NonRDFSource;
-use Trellis\StaticLdp\Model\RDFSource;
-use Trellis\StaticLdp\Model\ResourceFactory;
-use Silex\Api\ControllerProviderInterface;
-use Silex\Application;
-use Symfony\Component\HttpFoundation\Request;
+use App\TrellisConfiguration;
+use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\HttpFoundation\RequestStack;
+use App\Model\ResourceFactory;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Yaml\Yaml;
+use Twig\Environment;
 
-class ResourceController implements ControllerProviderInterface
+class ResourceController extends AbstractController
 {
+
     /**
-     * {@inheritdoc}
+     * The twig environment to render HTML.
+     *
+     * @var \Twig\Environment
      */
-    public function connect(Application $app)
+    private $twig_provider;
+
+    /**
+     * The configuration.
+     *
+     * @var mixed
+     */
+    private $configuration;
+
+    /**
+     * RequestStatck to get the current request.
+     *
+     * @var \Symfony\Component\HttpFoundation\RequestStack
+     */
+    private $requestStack;
+
+    /**
+     * ResourceController constructor.
+     *
+     * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+     *   The RequestStack.
+     * @param \Twig\Environment $twig_provider
+     *   The Twig environment.
+     * @param $configuration
+     *   The default configuration.
+     */
+    public function __construct(RequestStack $request_stack, Environment $twig_provider, $configuration)
     {
-
-        // Shared Controller collection Middleware
-        $controllers = $app['controllers_factory']
-          ->assert('path', '.+')
-          ->value('path', '');
-
-        // Options
-        $controllers->options("/{path}", "staticldp.resourcecontroller:options")
-            ->bind('staticldp.serverOptions');
-        // Generic GET.
-        $controllers->match("/{path}", "staticldp.resourcecontroller:get")
-            ->method('HEAD|GET')
-            ->bind('staticldp.resourceGet');
-
-        return $controllers;
+        $this->requestStack = $request_stack;
+        $this->twig_provider = $twig_provider;
+        $this->configuration = $configuration;
+        $this->loadConfig();
     }
 
     /**
-     * {@inheritdoc}
+     * Load a configuration file if one exists in the TRELLIS_CONFIG_DIR
      */
-    public function get(Application $app, Request $request, $path)
+    public function loadConfig()
     {
-        $docroot = $app['config']['sourceDirectory'];
+        $filename = rtrim(realpath($this->configuration['configuration_dir']), '/') . '/settings.yml';
+        if (file_exists($filename)) {
+            $config = Yaml::parse(file_get_contents($filename));
+            $processor = new Processor();
+            $trellis_configuration = new TrellisConfiguration();
+            $this->configuration = $processor->processConfiguration(
+                $trellis_configuration,
+                [$config]
+            );
+        }
+    }
+
+    /**
+     * Respond to a GET or HEAD request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function get(string $path)
+    {
+
+        $docroot = $this->configuration['sourceDirectory'];
         if (!empty($path)) {
             $path = "/{$path}";
         }
@@ -50,13 +88,15 @@ class ResourceController implements ControllerProviderInterface
             return new Response("Not Found", 404);
         }
 
-        $formats = $app['config']['validRdfFormats'];
+        $formats = $this->configuration['validRdfFormats'];
         $options = [
-            "contentDisposition" => $app['config']['contentDisposition']
+            "contentDisposition" => $this->configuration['contentDisposition'],
+            'extraPropertiesFilename' => $this->configuration['extraPropertiesFilename'],
         ];
 
-        $resource = ResourceFactory::create($requestedPath, $formats);
-        return $resource->respond($app, $request, $options);
+        $resource = ResourceFactory::create($requestedPath, $formats, $this->configuration);
+
+        return $resource->respond($this->requestStack->getCurrentRequest(), $this->twig_provider, $options);
     }
 
     /**

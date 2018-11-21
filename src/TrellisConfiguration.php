@@ -1,6 +1,6 @@
 <?php
 
-namespace Trellis\StaticLdp;
+namespace App;
 
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -19,7 +19,7 @@ class TrellisConfiguration implements ConfigurationInterface
                     ->cannotBeEmpty()
                 ->end()
                 ->scalarNode('template')
-                    ->defaultValue('default.twig')
+                    ->defaultValue('default.html.twig')
                 ->end()
                 ->scalarNode('defaultRdfFormat')
                     ->defaultValue('turtle')
@@ -43,7 +43,7 @@ class TrellisConfiguration implements ConfigurationInterface
                     ->end()
                     ->defaultValue([
                         "turtle" => [
-                            "mimeType" => "text/turtle",
+                            "mimeType" => "text/turtle; charset=UTF-8",
                             "extension" => "ttl"
                         ],
                         "jsonld" => [
