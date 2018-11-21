@@ -4,9 +4,9 @@ namespace App\Model;
 
 use App\TrellisConfiguration;
 use App\Model\Resource;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Twig\Environment;
 
 /**
@@ -47,11 +47,7 @@ class RDFSource extends Resource
                     break;
             }
             if ($this->canStream($responseFormat)) {
-                $filename = $this->path;
-                $stream = function () use ($filename) {
-                    readfile($filename);
-                };
-                return new StreamedResponse($stream, 200, $res->headers->all());
+                return new BinaryFileResponse($this->path, 200, $res->headers->all());
             } else {
                 $graph = new \EasyRdf_Graph();
                 $graph->parseFile($this->path, $this->getInputFormat($this->path), $request->getURI());

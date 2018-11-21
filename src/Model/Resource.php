@@ -224,7 +224,7 @@ abstract class Resource
                 }
             }
         }
-        return "text/turtle";
+        return "text/turtle; charset=UTF-8";
     }
 
     protected function getInputFormat($path)
