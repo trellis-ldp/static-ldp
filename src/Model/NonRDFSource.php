@@ -2,8 +2,6 @@
 
 namespace App\Model;
 
-use App\Trellis\StaticLdp\Provider\StaticLdpProvider;
-use Silex\Application;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

@@ -2,8 +2,6 @@
 
 namespace App\Model;
 
-use App\TrellisConfiguration;
-use App\Model\Resource;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,7 +29,6 @@ class RDFSource extends Resource
             $extParts = explode(".", $this->path);
             if (count($extParts) > 1) {
                 $ext = array_pop($extParts);
-                $described = implode(".", $extParts);
                 if (file_exists(implode(".", $extParts))) {
                     $uri = $request->getUri();
                     $link = "<" . substr($uri, 0, strlen($uri) - strlen($ext) - 1) . ">; rel=\"describes\"";

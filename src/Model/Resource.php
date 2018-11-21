@@ -2,8 +2,6 @@
 
 namespace App\Model;
 
-use App\DependencyInjection\StaticLdpExtension;
-use App\TrellisConfiguration;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 
@@ -42,8 +40,6 @@ abstract class Resource
      *   The request.
      * @param \Twig\Environment $twig_provider
      *   The twig provider.
-     * @param \App\Trellis\StaticLdp\TrellisConfiguration $configuration
-     *   The configuration options.
      * @param array $options
      *   Options for the response.
      * @return \Symfony\Component\HttpFoundation\Response
@@ -118,7 +114,7 @@ abstract class Resource
      *      The expanded JSON-LD parsed into a PHP array
      * @param $prefixes
      *      User-defined prefixes to use
-     * @return Array
+     * @return array
      *      A new array suitable for the Twig templates
      */
     protected function mapJsonLdForHTML($jsonld, $prefixes)
@@ -201,8 +197,6 @@ abstract class Resource
     /**
      * Find the mimeType for the request
      *
-     * @param array $validRdfFormats
-     *   Supported formats from the config.
      * @param \Symfony\Component\HttpFoundation\Request $request
      *   The current request.
      *

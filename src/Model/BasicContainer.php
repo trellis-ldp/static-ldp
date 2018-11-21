@@ -2,11 +2,6 @@
 
 namespace App\Model;
 
-use App\Trellis\StaticLdp\Provider\StaticLdpProvider;
-use Silex\Application;
-use Symfony\Bundle\FrameworkBundle\Templating\Loader\FilesystemLoader;
-use Symfony\Bundle\FrameworkBundle\Templating\PhpEngine;
-use Symfony\Bundle\FrameworkBundle\Templating\TemplateNameParser;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
@@ -73,22 +68,6 @@ class BasicContainer extends Resource
             if ($responseFormat == "jsonld") {
                 $content = $graph->serialise($responseFormat, $this->getSerialisationOptions($accept));
             } elseif ($responseFormat == "html") {
-                $options = [
-                    "compact" => true,
-                    "context" => (object) [
-                        'id' => '@id',
-                        'type' => '@type',
-                        'modified' => (object) [
-                            '@id' => self::DCTERMS_NS . 'modified',
-                            '@type' => 'http://www.w3.org/2001/XMLSchema#dateTime'
-                        ],
-                        'contains' => (object) [
-                            '@id' => self::LDP_NS . 'contains',
-                            '@type' => '@id'
-                        ]
-                    ]
-                ];
-
                 $data = json_decode($graph->serialise("jsonld"), true);
                 $dataset = $this->mapJsonLdForHTML($data, $this->resourceConfig['prefixes']);
 

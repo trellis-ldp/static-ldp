@@ -49,9 +49,11 @@ class RDFSourceTest extends StaticLdpTestBase
         $this->assertEquals($size, $response->headers->get('Content-Length'), "Content-Length header incorrect");
 
         $this->client->request('GET', "/nobel_914.ttl", [], [], ['HTTP_ACCEPT' => $expected_mime]);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode(), "GET should be allowed a second time.");
-        $this->assertTrue($this->client->getResponse()->headers->has("etag"), "Missing Etag header.");
-        $this->assertEquals($etag, $this->client->getResponse()->headers->get('etag'), "Etags don't match.");
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(200, $response->getStatusCode(), "GET should be allowed a second time.");
+        $this->assertTrue($response->headers->has("etag"), "Missing Etag header.");
+        $this->assertEquals($etag, $response->headers->get('etag'), "Etags don't match.");
 
         $headers = [
             'HTTP_ACCEPT' => $expected_mime,

@@ -2,6 +2,8 @@
 
 namespace App\Tests;
 
+use App\TrellisConstants;
+
 /**
  * Unit Test of methods not allowed response.
  *
@@ -39,7 +41,7 @@ class MethodsNotAllowedTest extends StaticLdpTestBase
      */
     public function testPatchMethod()
     {
-        $crawler = $this->client->request('PATCH', "/");
+        $this->client->request('PATCH', "/");
         $this->assertEquals($this->client->getResponse()->getStatusCode(), 405, "PATCH should not be allowed.");
         $this->assertTrue($this->client->getResponse()->headers->has('Link'), "Missing Link header");
         $headers = $this->client->getResponse()->headers->get('Link');
@@ -61,7 +63,7 @@ class MethodsNotAllowedTest extends StaticLdpTestBase
      */
     public function testPutMethod()
     {
-        $crawler = $this->client->request('PUT', "/");
+        $this->client->request('PUT', "/");
         $this->assertEquals($this->client->getResponse()->getStatusCode(), 405, "PATCH should not be allowed.");
         $this->assertTrue($this->client->getResponse()->headers->has('Link'), "Missing Link header");
         $headers = $this->client->getResponse()->headers->get('Link');
