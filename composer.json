@@ -62,7 +62,7 @@
         "check": "phpcs --standard=PSR2 src test",
         "test": [
             "@check",
-            "php ./bin/phpunit"
+            "TRELLIS_CONFIG_DIR=test/resources/config php ./bin/phpunit"
         ]
     },
     "conflict": {
