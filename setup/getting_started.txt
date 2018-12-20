@@ -1,0 +1,5 @@
+Static-LDP
+
+To set up static-ldp, please create a .env.local file with the following content:
+
+TRELLIS_SOURCE_DIR='/path/to/resources'

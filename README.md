@@ -18,16 +18,18 @@ A simple way to expose static assets as a read-only <a href="https://www.w3.org/
 To install `static-ldp`, follow these steps:
 
 1. run `composer create-project trellis-ldp/static-ldp`
-2. create a `./static-ldp/config/settings.yml` file like this:
+2. create a `./.env.local` file like this:
 
 ```
-sourceDirectory: /path/to/data/directory
+TRELLIS_SOURCE_DIR='/path/to/resources'
 ```
 
 ## Basics
 
 By installing `static-ldp` and configuring the `sourceDirectory` to point
 to the location of your static resources, you have a simple, read-only linked data server.
+
+The web content will be served from the `./public` directory.
 
 ## LDP Resources
 

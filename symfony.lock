@@ -1,0 +1,80 @@
+{
+    "psr/cache": {
+        "version": "1.0.1"
+    },
+    "psr/simple-cache": {
+        "version": "1.0.1"
+    },
+    "symfony/cache": {
+        "version": "v4.1.7"
+    },
+    "symfony/console": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "181d766db0eb468f41337f9b2d9d5b61ba1ee441"
+        }
+    },
+    "symfony/dependency-injection": {
+        "version": "v4.1.7"
+    },
+    "symfony/dotenv": {
+        "version": "v4.1.7"
+    },
+    "symfony/finder": {
+        "version": "v4.1.7"
+    },
+    "symfony/flex": {
+        "version": "1.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.0",
+            "ref": "5f8a51c0fad684396f6b6c0fd770e043439cb632"
+        }
+    },
+    "symfony/framework-bundle": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "9ec493d6f3575c54671493d635fa4b68658022ab"
+        }
+    },
+    "symfony/phpunit-bridge": {
+        "version": "4.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.1",
+            "ref": "b4c7d939cac9a67e02366fa7971746e9cbf1dad0"
+        }
+    },
+    "symfony/process": {
+        "version": "v4.1.7"
+    },
+    "symfony/twig-bridge": {
+        "version": "v4.1.7"
+    },
+    "symfony/twig-bundle": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "369b5b29dc52b2c190002825ae7ec24ab6f962dd"
+        }
+    },
+    "symfony/web-server-bundle": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "dae9b39fd6717970be7601101ce5aa960bf53d9a"
+        }
+    }
+}
