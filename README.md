@@ -26,7 +26,7 @@ TRELLIS_SOURCE_DIR='/path/to/resources'
 
 ## Basics
 
-By installing `static-ldp` and configuring the `sourceDirectory` to point
+By installing `static-ldp` and configuring the `TRELLIS_SOURCE_DIR` to point
 to the location of your static resources, you have a simple, read-only linked data server.
 
 The web content will be served from the `./public` directory.
