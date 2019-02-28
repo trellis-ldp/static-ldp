@@ -9,6 +9,7 @@ init:
 
 environment:
     TRELLIS_CONFIG_DIR: test/resources/config/
+    SYMFONY_DEPRECATIONS_HELPER: weak
 
 install:
     - ps: Set-Service wuauserv -StartupType Manual
