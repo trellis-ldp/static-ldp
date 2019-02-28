@@ -9,10 +9,9 @@ class TrellisConfiguration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('staticldp');
+        $treeBuilder = new TreeBuilder('staticldp');
 
-        $rootNode
+        $treeBuilder->getRootNode()
             ->children()
                 ->scalarNode('sourceDirectory')
                     ->isRequired()

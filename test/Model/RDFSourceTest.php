@@ -30,7 +30,6 @@ class RDFSourceTest extends StaticLdpTestBase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode(), "GET should be allowed.");
         $response = $this->client->getResponse();
         $charset = $response->getCharset();
-        $expected_mime = "{$request_mime}; charset={$charset}";
 
         $this->assertTrue($response->headers->has('Link'), "Missing Link header");
         $this->assertEquals($expected_links, $response->headers->get("Link", null, false), "Link headers incorrect.");
@@ -39,7 +38,7 @@ class RDFSourceTest extends StaticLdpTestBase
         $this->assertEquals($expected_vary, $response->headers->get('Vary'), "Vary headers incorrect.");
 
         $this->assertTrue($response->headers->has("Content-Type"), "Missing Content-Type header");
-        $this->assertEquals($expected_mime, $response->headers->get('Content-Type'), "Content-Type header incorrect");
+        $this->assertContains($request_mime, $response->headers->get('Content-Type'), "Content-Type header incorrect");
 
         $this->assertTrue($response->headers->has("etag"), "Missing Etag header.");
         $etag = $response->headers->get('etag');
@@ -48,7 +47,7 @@ class RDFSourceTest extends StaticLdpTestBase
         $this->assertTrue($response->headers->has("Content-Length"), "Missing Content-Length header");
         $this->assertEquals($size, $response->headers->get('Content-Length'), "Content-Length header incorrect");
 
-        $this->client->request('GET', "/nobel_914.ttl", [], [], ['HTTP_ACCEPT' => $expected_mime]);
+        $this->client->request('GET', "/nobel_914.ttl", [], [], ['HTTP_ACCEPT' => $request_mime]);
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode(), "GET should be allowed a second time.");
@@ -56,7 +55,7 @@ class RDFSourceTest extends StaticLdpTestBase
         $this->assertEquals($etag, $response->headers->get('etag'), "Etags don't match.");
 
         $headers = [
-            'HTTP_ACCEPT' => $expected_mime,
+            'HTTP_ACCEPT' => $request_mime,
             'HTTP_IF_NONE_MATCH' => "{$etag}"
         ];
         $this->client->request('GET', "/nobel_914.ttl", [], [], $headers);

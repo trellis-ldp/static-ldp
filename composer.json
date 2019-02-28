@@ -9,20 +9,20 @@
         "php": ">=7.1.0",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "symfony/console": "4.1.*",
+        "symfony/console": "4.2.*",
         "symfony/flex": "^1.1",
-        "symfony/framework-bundle": "4.1.*",
-        "symfony/yaml": "4.1.*",
+        "symfony/framework-bundle": "4.2.*",
+        "symfony/yaml": "4.2.*",
         "easyrdf/easyrdf": "^0.9.1",
         "ml/json-ld": "^1.1",
-        "symfony/twig-bundle": "4.1.*"
+        "symfony/twig-bundle": "4.2.*"
     },
     "require-dev": {
-        "symfony/dotenv": "4.1.*",
-        "symfony/web-server-bundle": "4.1.*",
+        "symfony/dotenv": "4.2.*",
+        "symfony/web-server-bundle": "4.2.*",
         "squizlabs/php_codesniffer": "^3.2",
-        "symfony/browser-kit": "4.1.*",
-        "symfony/phpunit-bridge": "4.1.*"
+        "symfony/browser-kit": "4.2.*",
+        "symfony/phpunit-bridge": "4.2.*"
     },
     "config": {
         "preferred-install": {
@@ -71,7 +71,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "4.1.*"
+            "require": "4.2.*"
         }
     }
 }
