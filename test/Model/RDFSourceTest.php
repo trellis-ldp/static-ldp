@@ -38,7 +38,7 @@ class RDFSourceTest extends StaticLdpTestBase
         $this->assertEquals($expected_vary, $response->headers->get('Vary'), "Vary headers incorrect.");
 
         $this->assertTrue($response->headers->has("Content-Type"), "Missing Content-Type header");
-        $this->assertContains($response->headers->get('Content-Type'), $request_mime, "Content-Type header incorrect");
+        $this->assertContains($request_mime, $response->headers->get('Content-Type'), "Content-Type header incorrect");
 
         $this->assertTrue($response->headers->has("etag"), "Missing Etag header.");
         $etag = $response->headers->get('etag');
