@@ -58,7 +58,7 @@
         "post-update-cmd": [
             "@auto-scripts"
         ],
-        "check": "./vendor/bin/phpcs --standard=PSR2 src tests",
+        "check": "php ./vendor/bin/phpcs --standard=PSR2 src tests",
         "test": [
             "@check",
             "php ./bin/phpunit"
