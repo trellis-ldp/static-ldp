@@ -36,7 +36,7 @@ class BasicContainerTest extends StaticLdpTestBase
         $expected_mime = "{$request_mime}; charset={$charset}";
 
         $this->assertTrue($response->headers->has('Link'), "Missing Link header");
-        $this->assertEquals($expected_links, $response->headers->get("Link", null, false), "Link headers incorrect.");
+        $this->assertEquals($expected_links, $response->headers->all("Link"), "Link headers incorrect.");
 
         $this->assertTrue($response->headers->has('Vary'), "Missing Vary header");
         $this->assertEquals($expected_vary, $response->headers->get('Vary'), "Vary headers incorrect.");
@@ -87,7 +87,7 @@ class BasicContainerTest extends StaticLdpTestBase
         $response = $this->client->getResponse();
 
         $this->assertTrue($response->headers->has('Link'), "Missing Link header");
-        $this->assertEquals($expected_links, $response->headers->get("Link", null, false), "Link headers incorrect.");
+        $this->assertEquals($expected_links, $response->headers->all("Link"), "Link headers incorrect.");
 
         $this->assertTrue($response->headers->has('Vary'), "Missing Vary header");
         $this->assertEquals($expected_vary, $response->headers->get('Vary'), "Vary headers incorrect.");

@@ -4,10 +4,10 @@ main:
     path: ''
   requirements:
     path: '.+'
-  methods: [HEAD, GET]
-  controller: App\Controller\ResourceController::get
+  methods: HEAD|GET
+  controller: App\Controller\ResourceController::getResource
 
 options:
   path: /
-  methods: [OPTIONS]
+  methods: OPTIONS
   controller: App\Controller\ResourceController::options

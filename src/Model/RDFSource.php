@@ -56,6 +56,8 @@ class RDFSource extends Resource
                 } else {
                     $content = $graph->serialise($responseFormat);
                 }
+                // Content-length needs to be corrected or responses can be cut off.
+                $res->headers->set('Content-Length', strlen($content), true);
                 $res->setContent($content);
             }
         }

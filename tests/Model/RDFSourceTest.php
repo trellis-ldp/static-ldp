@@ -32,7 +32,7 @@ class RDFSourceTest extends StaticLdpTestBase
         $charset = $response->getCharset();
 
         $this->assertTrue($response->headers->has('Link'), "Missing Link header");
-        $this->assertEquals($expected_links, $response->headers->get("Link", null, false), "Link headers incorrect.");
+        $this->assertEquals($expected_links, $response->headers->all("Link"), "Link headers incorrect.");
 
         $this->assertTrue($response->headers->has('Vary'), "Missing Vary header");
         $this->assertEquals($expected_vary, $response->headers->get('Vary'), "Vary headers incorrect.");
@@ -43,7 +43,7 @@ class RDFSourceTest extends StaticLdpTestBase
         $this->assertTrue($response->headers->has("etag"), "Missing Etag header.");
         $etag = $response->headers->get('etag');
 
-        $size = filesize("./test/resources/test_directory/nobel_914.ttl");
+        $size = filesize("./tests/resources/test_directory/nobel_914.ttl");
         $this->assertTrue($response->headers->has("Content-Length"), "Missing Content-Length header");
         $this->assertEquals($size, $response->headers->get('Content-Length'), "Content-Length header incorrect");
 
@@ -79,7 +79,7 @@ class RDFSourceTest extends StaticLdpTestBase
         $response = $this->client->getResponse();
 
         $this->assertTrue($response->headers->has('Link'), "Missing Link header");
-        $this->assertEquals($expected_links, $response->headers->get("Link", null, false), "Link headers incorrect.");
+        $this->assertEquals($expected_links, $response->headers->all("Link"), "Link headers incorrect.");
 
         $this->assertTrue($response->headers->has('Vary'), "Missing Vary header");
         $this->assertEquals($expected_vary, $response->headers->get('Vary'), "Vary headers incorrect.");

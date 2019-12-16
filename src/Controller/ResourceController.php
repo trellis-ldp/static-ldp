@@ -3,11 +3,11 @@
 namespace App\Controller;
 
 use App\TrellisConfiguration;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\HttpFoundation\RequestStack;
 use App\Model\ResourceFactory;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Yaml\Yaml;
 use Twig\Environment;
 
@@ -73,9 +73,12 @@ class ResourceController extends AbstractController
     /**
      * Respond to a GET or HEAD request
      *
+     * @param string $path
+     *   The requested path.
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function get(string $path)
+    public function getResource(string $path)
     {
 
         $docroot = $this->configuration['sourceDirectory'];
