@@ -11,7 +11,7 @@ before_install:
   - composer install
 
 env:
-    TRELLIS_CONFIG_DIR=test/resources/config/
+    TRELLIS_CONFIG_DIR=tests/resources/config/
 
 script:
   - composer test
