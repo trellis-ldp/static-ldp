@@ -8,7 +8,7 @@ init:
     - SET COMPOSER_NO_INTERACTION=1
 
 environment:
-    TRELLIS_CONFIG_DIR: test/resources/config/
+    TRELLIS_CONFIG_DIR: tests/resources/config/
     SYMFONY_DEPRECATIONS_HELPER: weak
 
 install:
