@@ -32,7 +32,7 @@ class NonRDFSourceTest extends StaticLdpTestBase
         $this->assertEquals("image/jpeg", $response->headers->get('Content-Type'), "Content-Type header incorrect");
 
         $this->assertTrue($response->headers->has('Link'), "Missing Link header");
-        $this->assertEquals($expected_links, $response->headers->get("Link", null, false), "Link headers incorrect.");
+        $this->assertEquals($expected_links, $response->headers->all("Link"), "Link headers incorrect.");
 
         $this->assertTrue($response->headers->has("etag"), "Missing Etag header.");
     }

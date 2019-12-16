@@ -1,6 +1,6 @@
 vendor/
 config/settings.yml
-settings.yml
+/settings.yml
 composer.lock
 .buildpath
 .project

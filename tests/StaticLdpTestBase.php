@@ -17,7 +17,6 @@ class StaticLdpTestBase extends WebTestCase
      */
     public function setUp()
     {
-        parent::setUp();
         $this->client = static::createClient();
         $this->client->catchExceptions(false);
     }
