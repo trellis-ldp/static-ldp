@@ -108,4 +108,3 @@ support a serialization that is not included here. The RDF format (e.g. `turtle`
 The default HTML display template will present IRIs in short (prefixed) form if those
 prefixes are registered. By default a number of common prefixes are included, but
 any prefix may be registered here.
-
