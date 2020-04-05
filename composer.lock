@@ -308,16 +308,16 @@
         },
         {
             "name": "symfony/cache",
-            "version": "v4.4.5",
+            "version": "v4.4.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/cache.git",
-                "reference": "28511cbd8c760a19f4b4b70961d2cd957733b3d9"
+                "reference": "f777b570291aebe51081b9827e05f3a747665e87"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/cache/zipball/28511cbd8c760a19f4b4b70961d2cd957733b3d9",
-                "reference": "28511cbd8c760a19f4b4b70961d2cd957733b3d9",
+                "url": "https://api.github.com/repos/symfony/cache/zipball/f777b570291aebe51081b9827e05f3a747665e87",
+                "reference": "f777b570291aebe51081b9827e05f3a747665e87",
                 "shasum": ""
             },
             "require": {
@@ -383,7 +383,7 @@
                 "caching",
                 "psr6"
             ],
-            "time": "2020-02-20T16:31:44+00:00"
+            "time": "2020-03-27T16:54:36+00:00"
         },
         {
             "name": "symfony/cache-contracts",
@@ -445,16 +445,16 @@
         },
         {
             "name": "symfony/config",
-            "version": "v4.4.5",
+            "version": "v4.4.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/config.git",
-                "reference": "cbfef5ae91ccd3b06621c18d58cd355c68c87ae9"
+                "reference": "3f4a3de1af498ed0ea653d4dc2317794144e6ca4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/config/zipball/cbfef5ae91ccd3b06621c18d58cd355c68c87ae9",
-                "reference": "cbfef5ae91ccd3b06621c18d58cd355c68c87ae9",
+                "url": "https://api.github.com/repos/symfony/config/zipball/3f4a3de1af498ed0ea653d4dc2317794144e6ca4",
+                "reference": "3f4a3de1af498ed0ea653d4dc2317794144e6ca4",
                 "shasum": ""
             },
             "require": {
@@ -505,7 +505,7 @@
             ],
             "description": "Symfony Config Component",
             "homepage": "https://symfony.com",
-            "time": "2020-02-04T09:32:40+00:00"
+            "time": "2020-03-27T16:54:36+00:00"
         },
         {
             "name": "symfony/console",
@@ -641,16 +641,16 @@
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v4.4.5",
+            "version": "v4.4.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dependency-injection.git",
-                "reference": "ebb2e882e8c9e2eb990aa61ddcd389848466e342"
+                "reference": "755b18859be26b90f4bf63753432d3387458bf31"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/ebb2e882e8c9e2eb990aa61ddcd389848466e342",
-                "reference": "ebb2e882e8c9e2eb990aa61ddcd389848466e342",
+                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/755b18859be26b90f4bf63753432d3387458bf31",
+                "reference": "755b18859be26b90f4bf63753432d3387458bf31",
                 "shasum": ""
             },
             "require": {
@@ -710,7 +710,7 @@
             ],
             "description": "Symfony DependencyInjection Component",
             "homepage": "https://symfony.com",
-            "time": "2020-02-29T09:50:10+00:00"
+            "time": "2020-03-30T10:09:30+00:00"
         },
         {
             "name": "symfony/error-handler",
@@ -898,16 +898,16 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v4.4.5",
+            "version": "v4.4.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "266c9540b475f26122b61ef8b23dd9198f5d1cfd"
+                "reference": "fe297193bf2e6866ed900ed2d5869362768df6a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/266c9540b475f26122b61ef8b23dd9198f5d1cfd",
-                "reference": "266c9540b475f26122b61ef8b23dd9198f5d1cfd",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/fe297193bf2e6866ed900ed2d5869362768df6a7",
+                "reference": "fe297193bf2e6866ed900ed2d5869362768df6a7",
                 "shasum": ""
             },
             "require": {
@@ -944,20 +944,20 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
-            "time": "2020-01-21T08:20:44+00:00"
+            "time": "2020-03-27T16:54:36+00:00"
         },
         {
             "name": "symfony/finder",
-            "version": "v4.4.5",
+            "version": "v4.4.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "ea69c129aed9fdeca781d4b77eb20b62cf5d5357"
+                "reference": "5729f943f9854c5781984ed4907bbb817735776b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/ea69c129aed9fdeca781d4b77eb20b62cf5d5357",
-                "reference": "ea69c129aed9fdeca781d4b77eb20b62cf5d5357",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/5729f943f9854c5781984ed4907bbb817735776b",
+                "reference": "5729f943f9854c5781984ed4907bbb817735776b",
                 "shasum": ""
             },
             "require": {
@@ -993,7 +993,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2020-02-14T07:42:58+00:00"
+            "time": "2020-03-27T16:54:36+00:00"
         },
         {
             "name": "symfony/flex",
@@ -1046,16 +1046,16 @@
         },
         {
             "name": "symfony/framework-bundle",
-            "version": "v4.4.5",
+            "version": "v4.4.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/framework-bundle.git",
-                "reference": "df5528926e6e1954975f3d73a91f029ba3d9c76b"
+                "reference": "80cdda836cfbe3ccb2bdd4a974f632473f0807a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/framework-bundle/zipball/df5528926e6e1954975f3d73a91f029ba3d9c76b",
-                "reference": "df5528926e6e1954975f3d73a91f029ba3d9c76b",
+                "url": "https://api.github.com/repos/symfony/framework-bundle/zipball/80cdda836cfbe3ccb2bdd4a974f632473f0807a6",
+                "reference": "80cdda836cfbe3ccb2bdd4a974f632473f0807a6",
                 "shasum": ""
             },
             "require": {
@@ -1173,7 +1173,7 @@
             ],
             "description": "Symfony FrameworkBundle",
             "homepage": "https://symfony.com",
-            "time": "2020-02-28T13:15:16+00:00"
+            "time": "2020-03-30T11:41:10+00:00"
         },
         {
             "name": "symfony/http-foundation",
@@ -1618,16 +1618,16 @@
         },
         {
             "name": "symfony/routing",
-            "version": "v4.4.5",
+            "version": "v4.4.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/routing.git",
-                "reference": "4124d621d0e445732520037f888a0456951bde8c"
+                "reference": "0f562fa613e288d7dbae6c63abbc9b33ed75a8f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/routing/zipball/4124d621d0e445732520037f888a0456951bde8c",
-                "reference": "4124d621d0e445732520037f888a0456951bde8c",
+                "url": "https://api.github.com/repos/symfony/routing/zipball/0f562fa613e288d7dbae6c63abbc9b33ed75a8f8",
+                "reference": "0f562fa613e288d7dbae6c63abbc9b33ed75a8f8",
                 "shasum": ""
             },
             "require": {
@@ -1690,7 +1690,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2020-02-25T12:41:09+00:00"
+            "time": "2020-03-30T11:41:10+00:00"
         },
         {
             "name": "symfony/service-contracts",
@@ -2063,16 +2063,16 @@
         },
         {
             "name": "symfony/var-exporter",
-            "version": "v4.4.5",
+            "version": "v4.4.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-exporter.git",
-                "reference": "1a76a943f2af334da13bc9f33f49392fa530eec9"
+                "reference": "6e4939b084defee0ab60a21e6a02e3a198afd91f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-exporter/zipball/1a76a943f2af334da13bc9f33f49392fa530eec9",
-                "reference": "1a76a943f2af334da13bc9f33f49392fa530eec9",
+                "url": "https://api.github.com/repos/symfony/var-exporter/zipball/6e4939b084defee0ab60a21e6a02e3a198afd91f",
+                "reference": "6e4939b084defee0ab60a21e6a02e3a198afd91f",
                 "shasum": ""
             },
             "require": {
@@ -2119,7 +2119,7 @@
                 "instantiate",
                 "serialize"
             ],
-            "time": "2020-01-04T13:00:46+00:00"
+            "time": "2020-03-27T16:54:36+00:00"
         },
         {
             "name": "symfony/yaml",
