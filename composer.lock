@@ -117,16 +117,16 @@
         },
         {
             "name": "ml/json-ld",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lanthaler/JsonLD.git",
-                "reference": "b5f82820c255cb64067b1c7adbb819cad4afa70a"
+                "reference": "c74a1aed5979ed1cfb1be35a55a305fd30e30b93"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lanthaler/JsonLD/zipball/b5f82820c255cb64067b1c7adbb819cad4afa70a",
-                "reference": "b5f82820c255cb64067b1c7adbb819cad4afa70a",
+                "url": "https://api.github.com/repos/lanthaler/JsonLD/zipball/c74a1aed5979ed1cfb1be35a55a305fd30e30b93",
+                "reference": "c74a1aed5979ed1cfb1be35a55a305fd30e30b93",
                 "shasum": ""
             },
             "require": {
@@ -162,7 +162,7 @@
                 "JSON-LD",
                 "jsonld"
             ],
-            "time": "2018-11-18T20:26:18+00:00"
+            "time": "2020-06-16T17:45:06+00:00"
         },
         {
             "name": "psr/cache",
