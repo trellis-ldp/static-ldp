@@ -2,6 +2,7 @@
 
 namespace App\Tests\Model;
 
+use EasyRdf\Graph;
 use App\Model\Resource;
 use App\Tests\StaticLdpTestBase;
 
@@ -56,7 +57,7 @@ class BasicContainerTest extends StaticLdpTestBase
         $subject = "http://localhost/";
         $contains = "http://www.w3.org/ns/ldp#contains";
         $summary = "http://www.w3.org/ns/activitystreams#summary";
-        $graph = new \EasyRdf_Graph();
+        $graph = new Graph();
         $graph->parse($response->getContent(), "turtle", $subject);
         $this->assertEquals(6, $graph->countTriples());
         $this->assertTrue($graph->hasProperty($subject, "http://purl.org/dc/terms/modified"));
@@ -108,7 +109,7 @@ class BasicContainerTest extends StaticLdpTestBase
 
         $subject = "http://localhost/";
         $contains = "http://www.w3.org/ns/ldp#contains";
-        $graph = new \EasyRdf_Graph();
+        $graph = new Graph();
         $graph->parse($json, "jsonld", $subject);
         $this->assertEquals(6, $graph->countTriples());
         $this->assertTrue($graph->hasProperty($subject, "http://purl.org/dc/terms/modified"));

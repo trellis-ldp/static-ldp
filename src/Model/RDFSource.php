@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use EasyRdf\Graph;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,7 +47,7 @@ class RDFSource extends Resource
             if ($this->canStream($responseFormat)) {
                 return new BinaryFileResponse($this->path, 200, $res->headers->all());
             } else {
-                $graph = new \EasyRdf_Graph();
+                $graph = new Graph();
                 $graph->parseFile($this->path, $this->getInputFormat($this->path), $request->getURI());
                 if ($responseFormat == "html") {
                     $data = json_decode($graph->serialise("jsonld"), true);

@@ -2,6 +2,8 @@
 
 namespace App\Model;
 
+use EasyRdf\Graph;
+use EasyRdf\RdfNamespace;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
@@ -38,11 +40,11 @@ class BasicContainer extends Resource
             $subject = $request->getUri();
             $predicate = self::LDP_NS . "contains";
 
-            $namespaces = new \EasyRdf_Namespace();
+            $namespaces = new RdfNamespace();
             $namespaces->set("ldp", self::LDP_NS);
             $namespaces->set("dc", self::DCTERMS_NS);
 
-            $graph = new \EasyRdf_Graph();
+            $graph = new Graph();
             $graph->addLiteral($subject, self::DCTERMS_NS . "modified", $modifiedTime);
             $graph->addResource($subject, self::RDF_NS . "type", self::LDP_NS . "Resource");
             $graph->addResource($subject, self::RDF_NS . "type", self::LDP_NS . "BasicContainer");
