@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use EasyRdf\RdfNamespace;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 
@@ -119,7 +120,7 @@ abstract class Resource
      */
     protected function mapJsonLdForHTML($jsonld, $prefixes)
     {
-        $namespaces = new \EasyRdf_Namespace();
+        $namespaces = new RdfNamespace();
         foreach ($prefixes as $prefix => $uri) {
             $namespaces->set($prefix, $uri);
         }
