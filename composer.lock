@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a2cd255b8c820f8eb56efd07f5e36bb7",
+    "content-hash": "ae7af4803ea1d4f33e7a048985d58f45",
     "packages": [
         {
             "name": "easyrdf/easyrdf",
@@ -3096,16 +3096,16 @@
         },
         {
             "name": "symfony/phpunit-bridge",
-            "version": "v5.1.8",
+            "version": "v5.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "61744927348cd391ac12f7c6b70544991275845c"
+                "reference": "92a76ca5e64effd41ce111b8f476144dfa29f1f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/61744927348cd391ac12f7c6b70544991275845c",
-                "reference": "61744927348cd391ac12f7c6b70544991275845c",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/92a76ca5e64effd41ce111b8f476144dfa29f1f0",
+                "reference": "92a76ca5e64effd41ce111b8f476144dfa29f1f0",
                 "shasum": ""
             },
             "require": {
@@ -3115,7 +3115,8 @@
                 "phpunit/phpunit": "<4.8.35|<5.4.3,>=5.0|<6.4,>=6.0|9.1.2"
             },
             "require-dev": {
-                "symfony/deprecation-contracts": "^2.1"
+                "symfony/deprecation-contracts": "^2.1",
+                "symfony/error-handler": "^4.4|^5.0"
             },
             "suggest": {
                 "symfony/error-handler": "For tracking deprecated interfaces usages at runtime with DebugClassLoader"
@@ -3171,7 +3172,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-10-24T15:53:55+00:00"
+            "time": "2020-11-27T00:39:34+00:00"
         }
     ],
     "aliases": [],
