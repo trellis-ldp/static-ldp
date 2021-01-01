@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Setup PHP
-        uses: shivammathur/stup-php@v2
+        uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
           tools: composer:v2
