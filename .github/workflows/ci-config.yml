@@ -30,5 +30,6 @@ jobs:
 
       - name: Test static-ldp
         run: composer test
+        env: TRELLIS_CONFIG_DIR=tests/resources/config/
 
 
