@@ -1,0 +1,38 @@
+name: GitHub CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php: ['7.1', '7.2', '7.3', '7.4']
+
+    name: PHP ${{ matrix.php }} environment
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+
+      - name: Set up Composer
+        run: composer install
+
+      - name: Test static-ldp
+        run: composer test
+        env:
+          TRELLIS_CONFIG_DIR: tests/resources/config/
+
+
