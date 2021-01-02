@@ -2,8 +2,8 @@
 
 A simple way to expose static assets as a read-only <a href="https://www.w3.org/TR/ldp/">LDP</a> server.
 
-[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.1-8892BF.svg?style=flat-square)](https://php.net/)
-[![Build Status](https://travis-ci.com/trellis-ldp/static-ldp.svg?branch=main)](https://travis-ci.com/trellis-ldp/static-ldp)
+![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.1-8892BF.svg?style=flat-square)
+![Build Status](https://github.com/trellis-ldp/static-ldp/workflows/GitHub%20CI/badge.svg)
 
 ## Requirements
 
