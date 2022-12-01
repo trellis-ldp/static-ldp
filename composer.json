@@ -20,7 +20,7 @@
     "require-dev": {
         "symfony/dotenv": "4.4.*",
         "squizlabs/php_codesniffer": "^3.2",
-        "symfony/phpunit-bridge": "6.1.*",
+        "symfony/phpunit-bridge": "6.2.*",
         "symfony/browser-kit": "4.4.*"
     },
     "config": {
