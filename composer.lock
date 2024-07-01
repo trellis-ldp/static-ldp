@@ -3222,16 +3222,16 @@
         },
         {
             "name": "symfony/phpunit-bridge",
-            "version": "v6.4.7",
+            "version": "v6.4.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "a33ca737283c76617c4089a8425c7785b344e283"
+                "reference": "6e03e4db9696e0cfcda6537177c2c03dc49c45c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/a33ca737283c76617c4089a8425c7785b344e283",
-                "reference": "a33ca737283c76617c4089a8425c7785b344e283",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/6e03e4db9696e0cfcda6537177c2c03dc49c45c8",
+                "reference": "6e03e4db9696e0cfcda6537177c2c03dc49c45c8",
                 "shasum": ""
             },
             "require": {
@@ -3263,7 +3263,8 @@
                     "Symfony\\Bridge\\PhpUnit\\": ""
                 },
                 "exclude-from-classmap": [
-                    "/Tests/"
+                    "/Tests/",
+                    "/bin/"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3296,7 +3297,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-04-18T09:22:46+00:00"
+            "time": "2024-06-21T16:04:15+00:00"
         }
     ],
     "aliases": [],
